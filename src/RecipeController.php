@@ -2,6 +2,10 @@
 
 class RecipeController
 {
+    public function __construct(private RecipeGateway $gateway)
+    {
+
+    }
     public function processRequest(string $method, ?string $id): void
     {
         if ($id) {
@@ -19,7 +23,7 @@ class RecipeController
     {
         switch ($method) {
             case "GET":
-                echo json_encode(["id" => 123]);
+                echo json_encode($this->gateway->getAll());
                 break;
         }
     }

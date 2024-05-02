@@ -17,11 +17,11 @@ if ($parts[1] != 'recipes') {
 $id = $parts[2] ?? null;
 
 include("config/config.php");
-$database = new Database(DB_HOST,DB_NAME, DB_USER, "asdaDS");
+$database = new Database(DB_HOST,DB_NAME, DB_USER, DB_PASS);
 
-$database->getConnection();
+$gateway = new RecipeGateway($database);
 
-$controller = new RecipeController;
+$controller = new RecipeController($gateway);
 $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
 
 ?>
