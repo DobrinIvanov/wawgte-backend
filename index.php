@@ -1,10 +1,11 @@
 <?php
 
 declare(strict_types=1);
-
 spl_autoload_register(function ($class) {
     require __DIR__ . "/src/$class.php";
 });
+set_exception_handler("ErrorHandler::handleException");
+
 header("Content-type: application/json; charset=UTF-8");
 $parts = explode("/", $_SERVER["REQUEST_URI"]);
 
@@ -15,8 +16,9 @@ if ($parts[1] != 'recipes') {
 
 $id = $parts[2] ?? null;
 
-include("config/config.php")
-$database = new Database($DB_HOST,$DB_NAME, $DB_USER, $DB_PASSWORD);
+include("config/config.php");
+$database = new Database(DB_HOST,DB_NAME, DB_USER, "asdaDS");
+
 $database->getConnection();
 
 $controller = new RecipeController;
