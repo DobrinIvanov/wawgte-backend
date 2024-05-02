@@ -47,12 +47,12 @@ $sql_recipes = "CREATE TABLE IF NOT EXISTS recipes (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 )";
 
-$sql_recipe_books = "CREATE TABLE IF NOT EXISTS rcp_books {
+$sql_recipe_books = "CREATE TABLE IF NOT EXISTS recipe_books (
     book_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     visibility TINYINT,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
-}";
+)";
 
 $sql_user_favorites = "CREATE TABLE IF NOT EXISTS user_favorites (
     user_id INT,
