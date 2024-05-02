@@ -16,7 +16,8 @@ if ($parts[1] != 'recipes') {
 $id = $parts[2] ?? null;
 
 include("config/config.php")
-$database = new Database($DB_HOST,DB_NAME, DB_USER, DB_PASSWORD)
+$database = new Database($DB_HOST,$DB_NAME, $DB_USER, $DB_PASSWORD);
+$database->getConnection();
 
 $controller = new RecipeController;
 $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
