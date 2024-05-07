@@ -1,27 +1,38 @@
--- Inserting dummy data into the users table
-INSERT INTO users (username, password, email, profile_picture) VALUES
-('john_doe', 'password123', 'john@example.com', 'profile_pic1.jpg'),
-('jane_smith', 'securepass', 'jane@example.com', 'profile_pic2.jpg'),
-('sam_jackson', 'sam123', 'sam@example.com', NULL),
-('emily_white', 'emilypass', 'emily@example.com', 'profile_pic3.jpg');
+-- Inserting dummy data into users table
+INSERT INTO users (username, email, password) VALUES
+('user1', 'user1@example.com', 'password1'),
+('user2', 'user2@example.com', 'password2'),
+('user3', 'user3@example.com', 'password3');
 
--- Inserting dummy data into the recipes table
-INSERT INTO recipes (user_id, recipe_name, recipe_description, visibility) VALUES
-(1, 'Pasta Carbonara', 'Classic pasta dish made with eggs, cheese, bacon, and black pepper.', 1),
-(1, 'Chicken Alfredo', 'Creamy pasta dish with grilled chicken and Alfredo sauce.', 1),
-(2, 'Chocolate Cake', 'Decadent chocolate cake with rich chocolate frosting.', 1),
-(3, 'Greek Salad', 'Fresh salad with tomatoes, cucumbers, olives, and feta cheese.', 1);
+-- Inserting dummy data into recipes table
+INSERT INTO recipes (title, description, instructions, user_id) VALUES
+('Recipe 1', 'Description for Recipe 1', 'Instructions for Recipe 1', 1),
+('Recipe 2', 'Description for Recipe 2', 'Instructions for Recipe 2', 2),
+('Recipe 3', 'Description for Recipe 3', 'Instructions for Recipe 3', 3);
 
--- Inserting dummy data into the recipe_books table
-INSERT INTO recipe_books (user_id, visibility) VALUES
+-- Inserting dummy data into cookbooks table
+INSERT INTO cookbooks (title, description, user_id) VALUES
+('Cookbook 1', 'Description for Cookbook 1', 1),
+('Cookbook 2', 'Description for Cookbook 2', 2),
+('Cookbook 3', 'Description for Cookbook 3', 3);
+
+-- Inserting dummy data into favorites table
+INSERT INTO favorites (user_id, recipe_id) VALUES
 (1, 1),
-(2, 1),
-(3, 1),
-(4, 1);
+(2, 2),
+(3, 3);
 
--- Inserting dummy data into the user_favorites table
-INSERT INTO user_favorites (user_id, recipe_id) VALUES
+-- Inserting dummy data into tags table
+INSERT INTO tags (tag_name) VALUES
+('Vegetarian'),
+('Dessert'),
+('Italian');
+
+-- Inserting dummy data into recipe_tags table
+INSERT INTO recipe_tags (recipe_id, tag_id) VALUES
 (1, 1),
 (1, 2),
+(2, 2),
 (2, 3),
-(3, 4);
+(3, 1),
+(3, 3);
