@@ -1,5 +1,6 @@
 <?php
 
+// recipe controller, processes requests for recipes and uses methods from the gateway
 class RecipeController
 {
     public function __construct(private RecipeGateway $gateway)
@@ -28,7 +29,16 @@ class RecipeController
                 // also we need to use array format, so we convert that to array with json_decode( _ ,true)
                 // we also use (array) so that empty request returns an array instead of NULL
                 $data = (array) json_decode(file_get_contents("php://input"), true);
-                var_dump($data);
+                
+                $id = $this->gateway->create($data);
+
+                // for successful post request that adds content to db, its best to return 201 instead of 200
+                http_response_code(201);
+                echo json_encode([
+                    "message" => "Recipe added!",
+                    "id" => $id
+                ]);
+                break;
         }
     }
 }

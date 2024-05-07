@@ -23,6 +23,8 @@ if ($parts[2] != 'recipes') {
 $id = $parts[3] ?? null;
 
 include("config/config.php");
+
+// create database object with my details from config/config.php
 $database = new Database(DB_HOST,DB_NAME, DB_USER, DB_PASS);
 
 $gateway = new RecipeGateway($database);
