@@ -1,13 +1,22 @@
 <?php
-
+// Enable strict typing for this file
 declare(strict_types=1);
+
+// Register an autoloader function to automatically load classes when they are used
 spl_autoload_register(function ($class) {
+    // Require the file containing the class based on the class name and its assumed location in the "src" directory
     require __DIR__ . "/src/$class.php";
 });
+// Set the custom error handler function to handle errors
 set_error_handler("ErrorHandler::handleError");
+
+// Set the custom exception handler function to handle exceptions
 set_exception_handler("ErrorHandler::handleException");
 
+// Set the HTTP header to indicate that the response will be in JSON format with UTF-8 encoding
 header("Content-type: application/json; charset=UTF-8");
+
+// Split the REQUEST_URI into parts based on the "/" separator
 $parts = explode("/", $_SERVER["REQUEST_URI"]);
 
 // switch case?
