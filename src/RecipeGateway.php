@@ -80,4 +80,34 @@ class RecipeGateway
         // Return the fetched data
         return $data;
     }
+    public function update(array $current, array $new): int {
+
+        $sql = "UPDATE recipes
+                SET title = :title ,public = :public
+                WHERE recipe_id = :recipe_id;";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindValue(":title", $new["title"] ?? $current["title"], PDO::PARAM_STR);
+        $stmt->bindValue(":public", $new["public"] ?? $current["public"], PDO::PARAM_BOOL);
+        $stmt->bindValue(":recipe_id", $current["recipe_id"], PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        // return the number of rows that were affected by the SQL statement
+        return $stmt->rowCount();
+    }
+    public function delete(string $id): int {
+        $sql = "DELETE FROM recipes
+                WHERE recipe_id = :recipe_id;";
+        
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindValue(":recipe_id", $id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->rowCount();
+    }
+    
 }
