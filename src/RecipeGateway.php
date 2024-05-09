@@ -1,10 +1,13 @@
 <?php
 class RecipeGateway
-{   
+{  
+    // Declare a private property to hold the PDO connection 
     private PDO $conn;
 
+    // Constructor method to initialize the RecipeGateway object with a database connection
     public function __construct(Database $database)
-    {
+    {   
+        // Get the PDO connection from the injected Database object
         $this->conn = $database->getConnection();
     }
 
@@ -34,11 +37,15 @@ class RecipeGateway
 
     // create method on the RecipeGateway that would handle post requests towards backend/recipes and create recipes in the db
     public function create(array $data): string {
+
+        // SQL query to insert recipe data into the 'recipes' table
         $sql = "INSERT INTO recipes (title, description, instructions, user_id, public)
                 VALUES (:title, :description, :instructions, :user_id, :public)";
 
+        // Prepare the SQL statement for execution
         $stmt = $this->conn->prepare($sql);
 
+        // Bind values to the placeholders in the SQL query
         $stmt->bindValue(":title", $data["title"], PDO::PARAM_STR);
         $stmt->bindValue(":description", $data["description"], PDO::PARAM_STR);
         $stmt->bindValue(":instructions", $data["instructions"], PDO::PARAM_STR);
@@ -47,14 +54,15 @@ class RecipeGateway
 
         $stmt->execute();
 
+        // Return the last inserted ID of the newly created recipe
         return $this->conn->lastInsertId();
 
     }
-    public function get(string $id)
+    public function get(string $id): array | false
     {
         $sql = "SELECT *
                 FROM recipes
-                WHERE id = :id;";
+                WHERE recipe_id = :id;";
         
         // Prepare the SQL statement for execution
         $stmt = $this->conn->prepare($sql);
@@ -64,6 +72,11 @@ class RecipeGateway
         $stmt->execute();
         // Fetch the result set as an associative array
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($data !== false) {
+            $data["public"] = (bool) $data["public"];
+        }
+
         // Return the fetched data
         return $data;
     }

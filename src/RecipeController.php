@@ -22,7 +22,15 @@ class RecipeController
     private function processResourceRequest(string $method, string $id): void
     {
         // TODO: Resource request processing goes here
-        
+        $product = $this->gateway->get($id);
+
+        if ( ! $product) {
+            http_response_code(404);
+            echo json_encode(["message" => "Product not found!"]);
+            return;
+        }
+
+        echo json_encode($product);
     }
     private function processCollectionRequest(string $method): void
     {
