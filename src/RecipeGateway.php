@@ -50,4 +50,21 @@ class RecipeGateway
         return $this->conn->lastInsertId();
 
     }
+    public function get(string $id)
+    {
+        $sql = "SELECT *
+                FROM recipes
+                WHERE id = :id;";
+        
+        // Prepare the SQL statement for execution
+        $stmt = $this->conn->prepare($sql);
+        // Bind the provided ID parameter to the prepared statement, specifying it as an integer
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+        // Execute the prepared statement
+        $stmt->execute();
+        // Fetch the result set as an associative array
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Return the fetched data
+        return $data;
+    }
 }

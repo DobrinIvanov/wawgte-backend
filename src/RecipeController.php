@@ -22,6 +22,7 @@ class RecipeController
     private function processResourceRequest(string $method, string $id): void
     {
         // TODO: Resource request processing goes here
+        
     }
     private function processCollectionRequest(string $method): void
     {
@@ -60,6 +61,9 @@ class RecipeController
                     "id" => $id
                 ]);
                 break;
+            default:
+                http_response_code(405);
+                header("Allow: GET, POST");
         }
     }
     private function getValidationErrors(array $data): array
