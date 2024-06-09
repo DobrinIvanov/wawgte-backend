@@ -85,6 +85,7 @@ class RecipeController
                 // Return JSON-encoded array of all recipes from the gateway
                 echo json_encode($this->gateway->getAll());
                 break;
+                // return json_encode($this->gateway->getAll());
             case "POST":
                 // because our request works with JSON, we need to use file_get_contents instead of $_POST
                 // also we need to use array format, so we convert that to array with json_decode( _ ,true)
