@@ -1,6 +1,5 @@
 <?php
-class CookbookGateway
-{  
+class CookbookGateway {  
     // Declare a private property to hold the PDO connection 
     private PDO $conn;
 
@@ -10,3 +9,4 @@ class CookbookGateway
         // Get the PDO connection from the injected Database object
         $this->conn = $database->getConnection();
     }
+}

@@ -1,6 +1,5 @@
 <?php
-class RecipeGateway
-{  
+class RecipeGateway {  
     // Declare a private property to hold the PDO connection 
     private PDO $conn;
 

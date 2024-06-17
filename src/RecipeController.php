@@ -1,8 +1,7 @@
 <?php
 
 // recipe controller, processes requests for recipes and uses methods from the gateway
-class RecipeController
-{
+class RecipeController {
     // Constructor accepting a RecipeGateway instance
     public function __construct(private RecipeGateway $gateway)
     {
