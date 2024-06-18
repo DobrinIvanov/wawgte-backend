@@ -9,4 +9,20 @@ class CookbookGateway {
         // Get the PDO connection from the injected Database object
         $this->conn = $database->getConnection();
     }
+
+    public function get(string $id): array | false {
+        $sql = "SELECT *
+                FROM cookbooks
+                WHERE id =:id";
+        
+        $stmt = $this->$con->prepare($sql);
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($data !== false) {
+            $data["public"] = (bool) $data["public"];
+        }
+        return $data;
+    }
 }

@@ -43,7 +43,9 @@ switch ($object) {
         $gateway = new CookbookGateway($database);
 
         $controller = new CookbookController($gateway);
-        // TODO Process requests via the controller.
+
+        $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+        
     default:    
         http_response_code(404);
         exit;
