@@ -21,9 +21,9 @@ class RecipeController {
     private function processResourceRequest(string $method, string $id): void
     {
         // TODO: Resource request processing goes here
-        $product = $this->gateway->get($id);
+        $recipe = $this->gateway->get($id);
 
-        if ( ! $product) {
+        if ( ! $recipe) {
             http_response_code(404);
             echo json_encode(["message" => "Product not found!"]);
             return;
@@ -31,7 +31,7 @@ class RecipeController {
 
         switch ($method) {
             case "GET":
-                echo json_encode($product);
+                echo json_encode($recipe);
                 break;
             case "PATCH":
                 // because our request works with JSON, we need to use file_get_contents instead of $_POST

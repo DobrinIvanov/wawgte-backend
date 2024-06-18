@@ -13,9 +13,9 @@ class CookbookGateway {
     public function get(string $id): array | false {
         $sql = "SELECT *
                 FROM cookbooks
-                WHERE id =:id;";
+                WHERE cookbook_id=:id;";
         
-        $stmt = $this->$con->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
         $data = $stmt->fetch(PDO::FETCH_ASSOC);

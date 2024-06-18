@@ -45,7 +45,7 @@ switch ($object) {
         $controller = new CookbookController($gateway);
 
         $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
-        
+        break;
     default:    
         http_response_code(404);
         exit;
