@@ -26,7 +26,7 @@ include("config/config.php");
 $database = new Database(DB_HOST,DB_NAME, DB_USER, DB_PASS);
 
 $id = $parts[2] ?? null;
-$object = $parts[1]
+$object = $parts[1];
 
 switch ($object) {
     case 'recipes':
