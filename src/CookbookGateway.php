@@ -13,7 +13,7 @@ class CookbookGateway {
     public function get(string $id): array | false {
         $sql = "SELECT *
                 FROM cookbooks
-                WHERE id =:id";
+                WHERE id =:id;";
         
         $stmt = $this->$con->prepare($sql);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
@@ -23,6 +23,21 @@ class CookbookGateway {
         if ($data !== false) {
             $data["public"] = (bool) $data["public"];
         }
+        return $data;
+    }
+
+    public function getAll(): array | false {
+        $sql = "SELECT *
+                FROM cookbooks;";
+        
+        $stmt = $this->$con->prepare($sql);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASOC);
+
+        if ($data !== false) {
+            $data["public"] = (bool) $data["public"];
+        }
+
         return $data;
     }
 }
