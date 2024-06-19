@@ -40,7 +40,7 @@ class CookbookGateway {
 
         return $data;
     }
-    public function update(int $id): int {
+    public function delete(int $id): int {
         $sql = "DELETE FROM cookbooks WHERE cookbook_id=:id";
 
         $stmt = $this->conn->prepare($sql);
@@ -48,5 +48,23 @@ class CookbookGateway {
         $stmt->execute();
 
         return $stmt->rowCount();
-    } 
+    }
+
+    public function update(array $current, array $new): int {
+
+        $sql = "UPDATE cookbooks
+                SET title = :title ,public = :public
+                WHERE cookbook_id = :cookbook_id;";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindValue(":title", $new["title"] ?? $current["title"], PDO::PARAM_STR);
+        $stmt->bindValue(":public", $new["public"] ?? $current["public"], PDO::PARAM_BOOL);
+        $stmt->bindValue(":cookbook_id", $current["cookbook_id"], PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        // return the number of rows that were affected by the SQL statement
+        return $stmt->rowCount();
+    }
 }
