@@ -30,7 +30,7 @@ class CookbookGateway {
         $sql = "SELECT *
                 FROM cookbooks;";
         
-        $stmt = $this->$con->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $data = $stmt->fetch(PDO::FETCH_ASOC);
 
@@ -40,4 +40,13 @@ class CookbookGateway {
 
         return $data;
     }
+    public function update(int $id): int {
+        $sql = "DELETE FROM cookbooks WHERE cookbook_id=:id";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(":cookbook_id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->rowCount();
+    } 
 }
