@@ -51,7 +51,7 @@ class CookbookController {
 
                 // Return a JSON response indicating successful creation of the recipe
                 echo json_encode([
-                    "message" => "Recipe edited!",
+                    "message" => "Cookbook edited!",
                     "Affected Rows" => $rows_count
                 ]);
                 break; 
@@ -59,7 +59,7 @@ class CookbookController {
                 $rows = $this->gateway->delete($id);
 
                 echo json_encode([
-                    "message" => "Product $id deleted",
+                    "message" => "Cookbook $id deleted",
                     "rows_count" => $rows
                 ]);
                 break;

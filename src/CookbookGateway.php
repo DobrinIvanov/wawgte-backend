@@ -67,4 +67,19 @@ class CookbookGateway {
         // return the number of rows that were affected by the SQL statement
         return $stmt->rowCount();
     }
+    // TODO 
+    public function create(array $data): string {
+        $sql = "INSERT INTO cookbooks (title, description, user_id, public) 
+                VALUES ( :title, :description, :user_id, :public)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(":title", $data["title"], PDO::PARAM_STR);
+        $stmt->bindValue(":description", $data["description"], PDO::PARAM_STR);
+        $stmt->bindValue(":user_id", $data["user_id"], PDO::PARAM_INT);
+        $stmt->bindValue("public", $data["public"], PDO::PARAM_BOOL);
+        
+        $stmt->execute();
+        
+        return $this->conn->lastInsertId();
+
+    }
 }
