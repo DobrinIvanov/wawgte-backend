@@ -3,3 +3,4 @@ config/config.php
 dummy_data.sql
 .php-ini
 .php-version
+info.php
