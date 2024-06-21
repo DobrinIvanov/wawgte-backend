@@ -7,7 +7,7 @@ class CookbookController {
     // Method to process incoming requests
     public function processRequest(string $method, ?string $id): void
     {
-        // If an ID is provided, process resource request, otherwise process collection request
+        // If an ID is provided, process single resource request, otherwise process collection request
         if ($id) {
             $this->processResourceRequest($method, $id);
         } else {
@@ -69,6 +69,44 @@ class CookbookController {
         }
     }
     public function processCollectionRequest(string $method): void {
-        $data = [];
+        $cookbooksData = $this->gateway->getAll();
+
+        switch ($method) {
+            case "GET":
+                echo json_encode($cookbooksData);
+                break;
+            case "POST":
+                $data = (array) json_decode(file_get_contents("php://input"), true);
+                
+                // validate data and get errors if any
+                $errors = $this->getValidationErrors($data);
+
+                if ( ! empty($errors)) {
+                    // return "unprocessable entity"
+                    http_response_code(422);
+                    echo json_encode(["errors" => $errors]);
+                    break;
+
+                }
+
+                // Create a new recipe using data from the request and get the ID
+                $id = $this->gateway->create($data);
+
+                // for successful post request that adds content to db, its best to return 201 instead of 200
+                http_response_code(201);
+
+                // Return a JSON response indicating successful creation of the recipe
+                echo json_encode([
+                    "message" => "Cookbook added!",
+                    "id" => $id
+                ]);
+                break;
+            default:
+                http_response_code(405);
+                header("Allow: GET, POST");
+        }
+    }
+    public function getValidationErrors(array $data) {
+
     }
 }
