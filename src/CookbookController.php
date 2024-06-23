@@ -78,24 +78,17 @@ class CookbookController {
             case "POST":
                 $data = (array) json_decode(file_get_contents("php://input"), true);
                 
-                // validate data and get errors if any
                 $errors = $this->getValidationErrors($data);
 
                 if ( ! empty($errors)) {
-                    // return "unprocessable entity"
                     http_response_code(422);
                     echo json_encode(["errors" => $errors]);
                     break;
 
                 }
-
-                // Create a new recipe using data from the request and get the ID
                 $id = $this->gateway->create($data);
-
-                // for successful post request that adds content to db, its best to return 201 instead of 200
                 http_response_code(201);
 
-                // Return a JSON response indicating successful creation of the recipe
                 echo json_encode([
                     "message" => "Cookbook added!",
                     "id" => $id
@@ -106,7 +99,24 @@ class CookbookController {
                 header("Allow: GET, POST");
         }
     }
-    public function getValidationErrors(array $data) {
-
+    private function getValidationErrors(array $data, bool $is_new = true): array
+    {
+        $errors = [];
+        if ($is_new && empty($data["title"])) {
+            $errors[] = "cookbook title is required";
+        }
+        // check if title(title key) is empty
+        if ($is_new && empty($data["description"])) {
+            $errors[] = "description should not be empty"
+        }
+        if (array_key_exists("user_id", $data)) {
+                // If it exists, validate  it's an integer using FILTER_VALIDATE_INT
+            if (filter_var($data["user_id"], FILTER_VALIDATE_INT) === false){
+                // If not an integer, add an error message to the $errors array
+                $errors[] = "user_id must be an integer";
+            }
+        }
+        // Return the array of validation errors
+        return $errors;
     }
 }
