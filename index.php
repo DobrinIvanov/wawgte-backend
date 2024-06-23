@@ -25,26 +25,26 @@ include("config/config.php");
 // create database object with my details from config/config.php
 $database = new Database(DB_HOST,DB_NAME, DB_USER, DB_PASS);
 
-$id = $parts[2] ?? null;
 $object = $parts[1];
+$id = $parts[2] ?? null;
 
 switch ($object) {
     case 'recipes':
         // set up new recipe gateway connected to the database I need
-        $gateway = new RecipeGateway($database);
+        $recipeGateway = new RecipeGateway($database);
         
         // set up new Recipe Controller which would handle the HTTP requests and use the gateway methods I guess?
-        $controller = new RecipeController($gateway);
+        $recipeController = new RecipeController($recipeGateway);
         
         // actually process the request using this "processRequest" method ( does it come from PDO?)
-        $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+        $recipeController->processRequest($_SERVER["REQUEST_METHOD"], $id);
         break;
     case 'cookbooks':
-        $gateway = new CookbookGateway($database);
+        $cookbookGateway = new CookbookGateway($database);
 
-        $controller = new CookbookController($gateway);
+        $cookbookController = new CookbookController($cookbookGateway);
 
-        $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
+        $cookbookController->processRequest($_SERVER["REQUEST_METHOD"], $id);
         break;
     default:    
         http_response_code(404);

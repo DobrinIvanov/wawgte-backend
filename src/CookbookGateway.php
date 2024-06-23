@@ -26,22 +26,24 @@ class CookbookGateway {
         return $data;
     }
 
-    public function getAll(): array | false {
+    public function getAll(): array {
         $sql = "SELECT *
                 FROM cookbooks;";
         
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-        $data = $stmt->fetch(PDO::FETCH_ASOC);
-
-        if ($data !== false) {
-            $data["public"] = (bool) $data["public"];
+        $stmt = $this->conn->query($sql);
+        $data = [];
+        // $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            // in mysql bool is represented as 0/1 and here we convert to bool true/false for each recipe
+            $row["public"] = (bool) $row["public"];
+            // here we append each row into a data array
+            $data[] = $row;
         }
-
+        // we return all the recipes
         return $data;
     }
     public function delete(int $id): int {
-        $sql = "DELETE FROM cookbooks WHERE cookbook_id=:id";
+        $sql = "DELETE FROM cookbooks WHERE cookbook_id=:cookbook_id";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":cookbook_id", $id, PDO::PARAM_INT);

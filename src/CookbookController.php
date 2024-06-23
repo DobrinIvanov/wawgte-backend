@@ -107,7 +107,7 @@ class CookbookController {
         }
         // check if title(title key) is empty
         if ($is_new && empty($data["description"])) {
-            $errors[] = "description should not be empty"
+            $errors[] = "description should not be empty";
         }
         if (array_key_exists("user_id", $data)) {
                 // If it exists, validate  it's an integer using FILTER_VALIDATE_INT
