@@ -13,20 +13,71 @@ class UserController {
             $this->processCollectionRequest($method);
         };
     }
-    public function processResourceRequest(string $method,int $id) {
-        $recipe = $this->gateway->get($id);
+    public function processResourceRequest(string $method,int $id): void {
+        $user = $this->gateway->get($id);
 
-        if ( ! $recipe) {
+        if ( ! $user) {
             http_response_code(404);
-            echo json_encode(["message" => "Product not found!"]);
+            echo json_encode(["message" => "User does not exist!"]);
             return;
+        }
+        switch ($method) {
+            case "GET":
+                $user = $this->gateway->get($id);
+
+                if ( ! $user) {
+                    http_response_code(404);
+                    echo json_encode(["message" => "User does not exist!"]);
+                    return;
+                }
+                break;
+            
+            case "PATCH":
+                break;
+            case "DELETE":
+                break;
+            default:
+                http_response_code(405);
+                header("Allow: GET, POST, PATCH, DELETE");
+        }
+    }
+    public function processCollectionRequest(string $method): void {
+        switch ($method) {
+
+            
+        }
+    }
+    public function register(array $postData): void{
+        if ( ! empty($_POST['username']) && ! empty($_POST['email']) && ! empty($_POST['password']) )
+        {
+            $username = $_POST['username'];
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+            try {
+                // check for existing user with the same username or email
+                $sql_check_existing = "select * from users where username=:username";
+                $stmt_check_existing_user = $this->conn->prepare($sql_check_existing);
+                $stmt_check_existing_user->bindValue(":username", $username);
+                $stmt_check_existing_user->execute();
+                $existing_user_count = $stmt_check_existing_user->rowCount();
+                if ($existing_user_count > 0) {
+                    http_response_code(404);
+                    $server__response__error = array(
+                        "code" => http_response_code(404),
+                        "status" => false,
+                        "message" => "This user is already registered."
+                    );
+                    echo json_encode($server__response__error);
+                } else {
+                    // insert/add new user details
+                    // encrypt user password 
+                    $password__hash = password_hash($password, PASSWORD_DEFAULT);
+                    
+                }
         }
     }
     public function login() {
 
-    }
-    public function register() {
-        
     }
 
 }
