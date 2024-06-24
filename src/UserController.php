@@ -22,6 +22,12 @@ class UserController {
             return;
         }
     }
+    public function login() {
+
+    }
+    public function register() {
+        
+    }
 
 }
 

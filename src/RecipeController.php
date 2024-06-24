@@ -92,7 +92,7 @@ class RecipeController {
                 $data = (array) json_decode(file_get_contents("php://input"), true);
                 
                 // validate data and get errors if any
-                $errors = $this->getValidationErrors($data);
+                $errors = $this->getRecipeValidationErrors($data);
 
                 if ( ! empty($errors)) {
                     // return "unprocessable entity"
@@ -119,7 +119,7 @@ class RecipeController {
                 header("Allow: GET, POST");
         }
     }
-    private function getValidationErrors(array $data, bool $is_new = true): array
+    private function getRecipeValidationErrors(array $data, bool $is_new = true): array
     {
         $errors = [];
         // Check if the "title" key in the data array is empty

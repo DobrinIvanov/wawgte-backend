@@ -9,8 +9,6 @@ class UserGateway {
     public function get() {
         
     }
-    public function getAll(){
-    }
     public function update(){
         
     }
@@ -18,9 +16,11 @@ class UserGateway {
         
     }
     public function delete(){
-         
+        
     }
-    // leaving as reminder, not sure that one would be required at all
+    // public function getAll(){
+    // }
+    // not sure if that ^ would be required 
 }
 
 ?>

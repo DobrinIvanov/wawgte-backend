@@ -78,7 +78,7 @@ class CookbookController {
             case "POST":
                 $data = (array) json_decode(file_get_contents("php://input"), true);
                 
-                $errors = $this->getValidationErrors($data);
+                $errors = $this->getCookbookValidationErrors($data);
 
                 if ( ! empty($errors)) {
                     http_response_code(422);
@@ -99,7 +99,7 @@ class CookbookController {
                 header("Allow: GET, POST");
         }
     }
-    private function getValidationErrors(array $data, bool $is_new = true): array
+    private function getCookbookValidationErrors(array $data, bool $is_new = true): array
     {
         $errors = [];
         if ($is_new && empty($data["title"])) {
