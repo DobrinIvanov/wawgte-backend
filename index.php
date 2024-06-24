@@ -46,6 +46,13 @@ switch ($object) {
 
         $cookbookController->processRequest($_SERVER["REQUEST_METHOD"], $id);
         break;
+    case 'user':
+        $userGateway = new UserGateway($database);
+
+        $userController = new UserController($userGateway);
+
+        $userController->processRequest($_SERVER["REQUEST_METHOD"], $id);
+        break;
     default:    
         http_response_code(404);
         exit;
