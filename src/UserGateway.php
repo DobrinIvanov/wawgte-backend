@@ -6,6 +6,7 @@ class UserGateway {
     public function __construct(Database $database) {
         $this->conn = $database->getConnection();
     }
+
     public function get(int $id): array | false {
         
         $sql = "select user_id,username,email from users where user_id=:user_id";
@@ -18,9 +19,26 @@ class UserGateway {
         
         return $fetched_user;
     }
-    public function update(array $userData){
-        $sql = ""
+
+    public function updateEmail(array $currentEmail, array $newEmail): int {
+        $sql = "UPDATE users
+        SET email = :newEmail
+        WHERE email = :currentEmail;";
+
+        $stmtUpdateEmail = $this->conn->prepare($sql);
+        $stmtUpdateEmail->bindValue(":newEmail", $newEmail, PDO::PARAM_STR);
+        $stmtUpdateEmail->bindValue(":currentEmail", $currentEmail, PDO::PARAM_STR);
+
+        $stmtUpdateEmail->execute();
+
+        return $stmtUpdateEmail->rowCount();
+
     }
+
+    public function changePassword() {
+        
+    }
+
     public function create(array $userData) {
 
         $sql = "INSERT INTO users (username, email, password)
