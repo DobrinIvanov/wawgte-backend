@@ -35,8 +35,18 @@ class UserGateway {
 
     }
 
-    public function changePassword() {
-        
+    public function changePassword(int $user_id, string $newPassword): int {
+        $sql = "UPDATE users
+        SET password = :newPassword
+        WHERE user_id = :user_id;";
+
+        $stmtUpdateEmail = $this->conn->prepare($sql);
+        $stmtUpdateEmail->bindValue(":newPassword", $newPassword, PDO::PARAM_STR);
+        $stmtUpdateEmail->bindValue(":user_id", $user_id, PDO::PARAM_STR);
+
+        $stmtUpdateEmail->execute();
+
+        return $stmtUpdateEmail->rowCount(); 
     }
 
     public function create(array $userData) {
