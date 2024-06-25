@@ -6,7 +6,7 @@ class UserGateway {
     public function __construct(Database $database) {
         $this->conn = $database->getConnection();
     }
-    public function get($id): array | false {
+    public function get(int $id): array | false {
         
         $sql = "select user_id,username,email from users where user_id=:user_id";
         
@@ -18,7 +18,7 @@ class UserGateway {
         
         return $fetched_user;
     }
-    public function update(){
+    public function update(array $userData){
         $sql = ""
     }
     public function create(array $userData) {
@@ -32,8 +32,15 @@ class UserGateway {
         
         return $this->conn->lastInsertId();
     }
-    public function delete(){
-        $sql = ""
+    public function delete(string $id): int {
+        $sql = "DELETE FROM users WHERE user_id=:user_id";
+
+        $stmtDeleteUser = $this->conn->prepare($sql);
+        $stmtDeleteUser->bindValue(":id", $id, PDO::PARAM_INT);
+        $stmtDeleteUser->execute();
+
+        return $stmtDeleteUser->rowCount();
+
     }
     // public function getAll(){
     // }
