@@ -32,7 +32,6 @@ class UserGateway {
         $stmtUpdateEmail->execute();
 
         return $stmtUpdateEmail->rowCount();
-
     }
 
     public function changePassword(int $user_id, string $newPassword): int {

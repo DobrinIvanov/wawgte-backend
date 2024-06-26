@@ -38,8 +38,8 @@ class RecipeGateway {
     public function create(array $data): string {
 
         // SQL query to insert recipe data into the 'recipes' table
-        $sql = "INSERT INTO recipes (title, description, instructions, user_id, public)
-                VALUES (:title, :description, :instructions, :user_id, :public)";
+        $sql = "INSERT INTO recipes (title, description, instructions, public)
+                VALUES (:title, :description, :instructions, :public)";
 
         // Prepare the SQL statement for execution
         $stmt = $this->conn->prepare($sql);
@@ -48,7 +48,6 @@ class RecipeGateway {
         $stmt->bindValue(":title", $data["title"], PDO::PARAM_STR);
         $stmt->bindValue(":description", $data["description"], PDO::PARAM_STR);
         $stmt->bindValue(":instructions", $data["instructions"], PDO::PARAM_STR);
-        $stmt->bindValue(":user_id", $data["user_id"], PDO::PARAM_INT);
         $stmt->bindValue(":public", ((bool) $data["public"] ?? false), PDO::PARAM_BOOL);
 
         $stmt->execute();

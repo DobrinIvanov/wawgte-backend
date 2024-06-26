@@ -24,14 +24,12 @@ class UserController {
         switch ($method) {
             case "GET":
                 $user = $this->gateway->get($id);
-
                 if ( ! $user) {
                     http_response_code(404);
                     echo json_encode(["message" => "User does not exist!"]);
                     return;
                 }
                 break;
-            
             case "PATCH":
                 break;
             case "DELETE":
@@ -43,8 +41,12 @@ class UserController {
     }
     public function processCollectionRequest(string $method): void {
         switch ($method) {
-
-            
+            case "POST":
+                $data = (array) json_decode(file_get_contents("php://input"), true);
+                break;
+            default:
+                http_response_code(405);
+                header("Allow: GET, POST, PATCH, DELETE");
         }
     }
     public function register(array $postData): void{
@@ -62,21 +64,33 @@ class UserController {
                 $existing_user_count = $stmt_check_existing_user->rowCount();
                 if ($existing_user_count > 0) {
                     http_response_code(404);
-                    $server__response__error = array(
+                    $server_response_error = array(
                         "code" => http_response_code(404),
                         "status" => false,
                         "message" => "This user is already registered."
                     );
-                    echo json_encode($server__response__error);
+                    echo json_encode($server_response_error);
                 } else {
                     // insert/add new user details
                     // encrypt user password 
-                    $password__hash = password_hash($password, PASSWORD_DEFAULT);
-                    
-                }
+                    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+                    $dataParameters = [
+                        "username" => $_POST['username'],
+                        "email" => $_POST['email'],
+                        "password" => $password_hash
+                    ];
+                    if ($insertRecordFlag > 0) {
+                        $server_response_success = array(
+                            "code" => http_response_code(200),
+                            "status" => true,
+                            "message" => "User successfully created."
+                        );
+                        echo json_encode($server_response_success);
+                    }
+
         }
     }
-    public function login() {
+    public function login($username, $password): string {
 
     }
 
