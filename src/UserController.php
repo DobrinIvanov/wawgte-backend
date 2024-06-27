@@ -49,7 +49,7 @@ class UserController {
                 header("Allow: GET, POST, PATCH, DELETE");
         }
     }
-    public function register(array $postData): void{
+    public function register(array $postData): void {
         if ( ! empty($_POST['username']) && ! empty($_POST['email']) && ! empty($_POST['password']) )
         {
             $username = $_POST['username'];
@@ -79,6 +79,7 @@ class UserController {
                         "email" => $_POST['email'],
                         "password" => $password_hash
                     ];
+                    $insertRecordFlag = $this->gateway->create($dataParameters);
                     if ($insertRecordFlag > 0) {
                         $server_response_success = array(
                             "code" => http_response_code(200),
@@ -86,10 +87,19 @@ class UserController {
                             "message" => "User successfully created."
                         );
                         echo json_encode($server_response_success);
+                    } else {
+                        http_response_code(404);
+                        $server_response_error = array(
+                            "code" => http_response_code(404),
+                            "status" => false,
+                            "message" => "Failed to create user. Please try again."
+                        );
+                        echo json_encode($server_response_error);
                     }
-
+                }
         }
     }
+    // !!!! PLEASE TEST REGISTRATION BEFORE PROCEEDING WITH LOGIN!!!!!
     public function login($username, $password): string {
 
     }
