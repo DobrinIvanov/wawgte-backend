@@ -20,18 +20,21 @@ class UserGateway {
         return $fetched_user;
     }
 
-    public function updateEmail(array $currentEmail, array $newEmail): int {
+    public function updateEmail(array $current, array $new): int {
+
         $sql = "UPDATE users
-        SET email = :newEmail
-        WHERE email = :currentEmail;";
+        SET email = :email
+        WHERE user_id = :user_id;";
 
-        $stmtUpdateEmail = $this->conn->prepare($sql);
-        $stmtUpdateEmail->bindValue(":newEmail", $newEmail, PDO::PARAM_STR);
-        $stmtUpdateEmail->bindValue(":currentEmail", $currentEmail, PDO::PARAM_STR);
+        $stmt = $this->conn->prepare($sql);
 
-        $stmtUpdateEmail->execute();
+        $stmt->bindValue(":title", $new["email"], PDO::PARAM_STR);
+        $stmt->bindValue(":user_id", $current["user_id"], PDO::PARAM_INT);
 
-        return $stmtUpdateEmail->rowCount();
+        $stmt->execute();
+
+        // return the number of rows that were affected by the SQL statement
+        return $stmt->rowCount();
     }
 
     public function changePassword(int $user_id, string $newPassword): int {

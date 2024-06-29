@@ -21,28 +21,31 @@ class UserController {
             echo json_encode(["message" => "User does not exist!"]);
             return;
         }
+
         switch ($method) {
             case "GET":
-                $user = $this->gateway->get($id);
-                if ( ! $user) {
-                    http_response_code(404);
-                    echo json_encode(["message" => "User does not exist!"]);
-                    return;
-                }
+                echo json_encode($user);
                 break;
             case "PATCH":
+                // TODO on updating email only I think?
                 break;
             case "DELETE":
+                $rows = $this->gateway->delete($id);
+                echo json_encode([
+                    "message" => "User $id deleted",
+                    "rows_count" => $rows
+                ]);
                 break;
             default:
                 http_response_code(405);
-                header("Allow: GET, POST, PATCH, DELETE");
+                header("Allow: GET, PATCH, DELETE");
         }
     }
     public function processCollectionRequest(string $method): void {
         switch ($method) {
             case "POST":
                 $data = (array) json_decode(file_get_contents("php://input"), true);
+                $this->register($data);
                 break;
             default:
                 http_response_code(405);
@@ -101,7 +104,7 @@ class UserController {
     }
     // !!!! PLEASE TEST REGISTRATION BEFORE PROCEEDING WITH LOGIN!!!!!
     public function login($username, $password): string {
-
+        // TODO
     }
 
 }
