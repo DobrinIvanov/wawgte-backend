@@ -46,7 +46,7 @@ switch ($object) {
 
         $cookbookController->processRequest($_SERVER["REQUEST_METHOD"], $id);
         break;
-    case 'user':
+    case 'users':
         $userGateway = new UserGateway($database);
 
         $userController = new UserController($userGateway);

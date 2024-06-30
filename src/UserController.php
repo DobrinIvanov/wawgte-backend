@@ -53,20 +53,15 @@ class UserController {
         }
     }
     public function register(array $postData): void {
-        if ( ! empty($_POST['first_name']) && ! empty($_POST['last_name']) && ! empty($_POST['email']) && ! empty($_POST['password']) )
-        {
+        if ( ! empty($_POST['first_name']) && ! empty($_POST['last_name']) && ! empty($_POST['email']) && ! empty($_POST['password']) ) {
             $first_name = $_POST['first_name'];
             $last_name = $_POST['last_name'];
             $email = $_POST['email'];
             $password = $_POST['password'];
             try {
                 // check for existing user with the same username or email
-                $sql_check_existing = "select * from users where email=:email";
-                $stmt_check_existing_user = $this->conn->prepare($sql_check_existing);
-                $stmt_check_existing_user->bindValue(":email", $email);
-                $stmt_check_existing_user->execute();
-                $existing_user_count = $stmt_check_existing_user->rowCount();
-                if ($existing_user_count > 0) {
+                $existingUserCount = $this->gateway->getExistingUserCount($email);
+                if ($existingUserCount > 0) {
                     http_response_code(404);
                     $server_response_error = array(
                         "code" => http_response_code(404),
@@ -102,13 +97,28 @@ class UserController {
                         echo json_encode($server_response_error);
                     }
                 }
+            } catch (Exception $ex) {
+                http_response_code(404);
+                $server_response_error = array(
+                    "code" => http_response_code(404),
+                    "status" => false,
+                    "message" => "Oopps!! Something Went Wrong! " . $ex->getMessage()
+                );
+                echo json_encode($server_response_error);
+            } // end of try/catch
+        } else {
+            http_response_code(404);
+            $server_response_error = array(
+                "code" => http_response_code(404),
+                "status" => false,
+                "message" => "Invalid API parameters! Please contact the administrator or refer to the documentation for assistance."
+            );
+            echo json_encode($server_response_error);
         }
     }
     // !!!! PLEASE TEST REGISTRATION BEFORE PROCEEDING WITH LOGIN!!!!!
-    public function login($username, $password): string {
-        // TODO
-    }
-
+    // public function login($username, $password): string {
+    //     // TODO
 }
-
+    // }
 ?>

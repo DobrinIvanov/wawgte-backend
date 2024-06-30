@@ -9,7 +9,7 @@ class UserGateway {
 
     public function get(int $id): array | false {
         
-        $sql = "select user_id,username,email from users where user_id=:user_id";
+        $sql = "SELECT user_id,first_name,last_name,email FROM users WHERE user_id=:user_id";
         
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":user_id", $id, PDO::PARAM_INT);
@@ -22,9 +22,7 @@ class UserGateway {
 
     public function updateEmail(array $current, array $new): int {
 
-        $sql = "UPDATE users
-        SET email = :email
-        WHERE user_id = :user_id;";
+        $sql = "UPDATE users SET email = :email WHERE user_id = :user_id;";
 
         $stmt = $this->conn->prepare($sql);
 
@@ -51,13 +49,17 @@ class UserGateway {
         return $stmtUpdateEmail->rowCount(); 
     }
 
-    public function create(array $userData) {
+    public function create(array $userData): int {
 
-        $sql = "INSERT INTO users (username, email, password)
-                VALUES (:username, :email, :hashed_password)";
+        $sql = "INSERT INTO users (first_name, last_name, email, password)
+                VALUES (:first_name, :last_name, :email, :hashed_password)";
 
         $stmtCreateUser = $this->conn->prepare($sql);
-        $stmtCreateUser->bindValue(":username", $username, PDO::PARAM_STR);
+        $stmtCreateUser->bindValue(":first_name", $userData['first_name'], PDO::PARAM_STR);
+        $stmtCreateUser->bindValue(":last_name", $userData['last_name'], PDO::PARAM_STR);
+        $stmtCreateUser->bindValue(":email", $userData['email'], PDO::PARAM_STR);
+        $stmtCreateUser->bindValue(":hashed_password", $userData['password'], PDO::PARAM_STR);
+
         $stmtCreateUser->execute();
         
         return $this->conn->lastInsertId();
@@ -71,6 +73,17 @@ class UserGateway {
 
         return $stmtDeleteUser->rowCount();
 
+    }
+    public function getExistingUserCount(string $email): bool {
+        $sql = "SELECT * FROM users WHERE email=:email";
+
+        $stmtCheckExistingUser = $this->conn->prepare($sql);
+        $stmtCheckExistingUser->bindValue(":email", $email);
+        $stmtCheckExistingUser->execute();
+
+        $existingUserCount = $stmtCheckExistingUser->rowCount();
+        
+        return $existingUserCount;
     }
     // public function getAll(){
     // }
