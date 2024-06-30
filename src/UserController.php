@@ -53,16 +53,17 @@ class UserController {
         }
     }
     public function register(array $postData): void {
-        if ( ! empty($_POST['username']) && ! empty($_POST['email']) && ! empty($_POST['password']) )
+        if ( ! empty($_POST['first_name']) && ! empty($_POST['last_name']) && ! empty($_POST['email']) && ! empty($_POST['password']) )
         {
-            $username = $_POST['username'];
+            $first_name = $_POST['first_name'];
+            $last_name = $_POST['last_name'];
             $email = $_POST['email'];
             $password = $_POST['password'];
             try {
                 // check for existing user with the same username or email
-                $sql_check_existing = "select * from users where username=:username";
+                $sql_check_existing = "select * from users where email=:email";
                 $stmt_check_existing_user = $this->conn->prepare($sql_check_existing);
-                $stmt_check_existing_user->bindValue(":username", $username);
+                $stmt_check_existing_user->bindValue(":email", $email);
                 $stmt_check_existing_user->execute();
                 $existing_user_count = $stmt_check_existing_user->rowCount();
                 if ($existing_user_count > 0) {
@@ -78,7 +79,8 @@ class UserController {
                     // encrypt user password 
                     $password_hash = password_hash($password, PASSWORD_DEFAULT);
                     $dataParameters = [
-                        "username" => $_POST['username'],
+                        "first_name" => $_POST['first_name'],
+                        "last_name" => $_POST['last_name'],
                         "email" => $_POST['email'],
                         "password" => $password_hash
                     ];
