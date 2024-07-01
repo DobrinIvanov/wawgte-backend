@@ -88,7 +88,7 @@ class RecipeController {
                 $data = (array) json_decode(file_get_contents("php://input"), true);
                 
                 // validate data and get errors if any
-                $errors = $this->getRecipeValidationErrors($data);
+                $errors = $this->getRecipeValidationErrors($data, true);
 
                 if ( ! empty($errors)) {
                     // return "unprocessable entity"

@@ -42,7 +42,7 @@ class CookbookController {
                 }
 
                 // here $product > $current and $data > $new data
-                $rows_count = $this->gateway->update($product, $data);
+                $rowsCount = $this->gateway->update($product, $data);
 
                 // for successful post request that adds content to db, its best to return 201 instead of 200
                 http_response_code(200);
@@ -50,7 +50,7 @@ class CookbookController {
                 // Return a JSON response indicating successful creation of the recipe
                 echo json_encode([
                     "message" => "Cookbook edited!",
-                    "Affected Rows" => $rows_count
+                    "Affected Rows" => $rowsCount
                 ]);
                 break; 
             case "DELETE":
@@ -58,7 +58,7 @@ class CookbookController {
 
                 echo json_encode([
                     "message" => "Cookbook $id deleted",
-                    "rows_count" => $rows
+                    "rowsCount" => $rows
                 ]);
                 break;
             default:
@@ -100,11 +100,11 @@ class CookbookController {
     private function getCookbookValidationErrors(array $data, bool $is_new = true): array {
         $errors = [];
         if ($is_new && empty($data["title"])) {
-            $errors[] = "cookbook title is required";
+            $errors[] = "Cookbook title is required";
         }
         // check if title(title key) is empty
         if ($is_new && empty($data["description"])) {
-            $errors[] = "description should not be empty";
+            $errors[] = "Description should not be empty";
         }
         if (array_key_exists("user_id", $data)) {
                 // If it exists, validate  it's an integer using FILTER_VALIDATE_INT

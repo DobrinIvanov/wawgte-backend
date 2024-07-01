@@ -11,8 +11,7 @@ class RecipeGateway {
 
     public function getAll(): array {
         // sql code to select all recipes from the table
-        $sql = "SELECT *
-                FROM recipes;";
+        $sql = "SELECT * FROM recipes;";
 
         // set statement to current conn ($database.getConnection) > execute query(PDO stuff) method of it
         $stmt = $this->conn->query($sql);
@@ -55,8 +54,7 @@ class RecipeGateway {
 
     }
     public function get(string $id): array | false {
-        $sql = "SELECT *
-                FROM recipes
+        $sql = "SELECT * FROM recipes 
                 WHERE recipe_id = :id;";
         
         // Prepare the SQL statement for execution
@@ -77,12 +75,10 @@ class RecipeGateway {
     }
     public function update(array $current, array $new): int {
 
-        $sql = "UPDATE recipes
-                SET title = :title ,public = :public
+        $sql = "UPDATE recipes SET title = :title ,public = :public
                 WHERE recipe_id = :recipe_id;";
 
         $stmt = $this->conn->prepare($sql);
-
         $stmt->bindValue(":title", $new["title"] ?? $current["title"], PDO::PARAM_STR);
         $stmt->bindValue(":public", $new["public"] ?? $current["public"], PDO::PARAM_BOOL);
         $stmt->bindValue(":recipe_id", $current["recipe_id"], PDO::PARAM_INT);
@@ -93,13 +89,11 @@ class RecipeGateway {
         return $stmt->rowCount();
     }
     public function delete(string $id): int {
-        $sql = "DELETE FROM recipes
+        $sql = "DELETE FROM recipes 
                 WHERE recipe_id = :recipe_id;";
         
         $stmt = $this->conn->prepare($sql);
-
         $stmt->bindValue(":recipe_id", $id, PDO::PARAM_INT);
-
         $stmt->execute();
 
         return $stmt->rowCount();

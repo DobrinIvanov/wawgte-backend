@@ -10,8 +10,7 @@ class CookbookGateway {
     }
 
     public function get(string $id): array | false {
-        $sql = "SELECT *
-                FROM cookbooks
+        $sql = "SELECT * FROM cookbooks
                 WHERE cookbook_id=:id;";
         
         $stmt = $this->conn->prepare($sql);
@@ -26,8 +25,7 @@ class CookbookGateway {
     }
 
     public function getAll(): array {
-        $sql = "SELECT *
-                FROM cookbooks;";
+        $sql = "SELECT * FROM cookbooks;";
         
         $stmt = $this->conn->query($sql);
         $data = [];
@@ -42,7 +40,8 @@ class CookbookGateway {
         return $data;
     }
     public function delete(int $id): int {
-        $sql = "DELETE FROM cookbooks WHERE cookbook_id=:cookbook_id";
+        $sql = "DELETE FROM cookbooks 
+                WHERE cookbook_id=:cookbook_id";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":cookbook_id", $id, PDO::PARAM_INT);
@@ -53,8 +52,7 @@ class CookbookGateway {
 
     public function update(array $current, array $new): int {
 
-        $sql = "UPDATE cookbooks
-                SET title = :title ,public = :public
+        $sql = "UPDATE cookbooks SET title = :title ,public = :public
                 WHERE cookbook_id = :cookbook_id;";
 
         $stmt = $this->conn->prepare($sql);
@@ -72,15 +70,14 @@ class CookbookGateway {
     public function create(array $data): string {
         $sql = "INSERT INTO cookbooks (title, description, user_id, public) 
                 VALUES ( :title, :description, :user_id, :public)";
+
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":title", $data["title"], PDO::PARAM_STR);
         $stmt->bindValue(":description", $data["description"], PDO::PARAM_STR);
         $stmt->bindValue(":user_id", $data["user_id"], PDO::PARAM_INT);
         $stmt->bindValue("public", $data["public"], PDO::PARAM_BOOL);
-        
         $stmt->execute();
         
         return $this->conn->lastInsertId();
-
     }
 }

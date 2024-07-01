@@ -43,19 +43,29 @@ class UserController {
                 break;
             default:
                 http_response_code(405);
-                header("Allow: GET, PATCH, DELETE");
+                header("Allow: GET, POST, PATCH, DELETE");
         }
     }
     public function processCollectionRequest(string $method): void {
         switch ($method) {
             case "POST":
+                // create/register new user
                 $postData = (array) json_decode(file_get_contents("php://input"), true);
-                var_dump($postData);
+
+                $errors = $this->getRegistrationValidationErrors($postData);
+                if ( ! empty($errors)) {
+                    // return "unprocessable entity"
+                    http_response_code(422);
+                    echo json_encode(["errors" => $errors]);
+                    break;
+
+                }
+
                 $this->register($postData);
                 break;
             default:
                 http_response_code(405);
-                header("Allow: GET, POST, PATCH, DELETE");
+                header("Allow: POST");
         }
     }
     public function register(array $postData): void {
@@ -65,7 +75,7 @@ class UserController {
             $email = $postData['email'];
             $password = $postData['password'];
             try {
-                // check for existing user with the same username or email
+                // check for existing user with the same email
                 $existingUserCount = $this->gateway->getExistingUserCount($email);
                 if ($existingUserCount > 0) {
                     http_response_code(404);
@@ -124,7 +134,28 @@ class UserController {
     }
     // !!!! PLEASE TEST REGISTRATION BEFORE PROCEEDING WITH LOGIN!!!!!
     public function login($email, $password): string {
-            // TODO
+        // TODO
+    }
+    // PLEASE TEST VALIDATION FUNCTION
+    public function getRegistrationValidationErrors(array $data, bool $is_new = true): array {
+        $errors = [];
+
+        if ($is_new && (empty($data["email"]) || empty($data['password']))) {
+            // If empty, add an error message to the $errors array
+            $errors[] = "Email and password must not be empty";
+        }
+        if (filter_var($data['email'], FILTER_VALIDATE_EMAIL) === false) {
+            $errors[] = "Email address must be a valid one";
+        }
+        if (strlen($data['password']) < 8) {
+            $errors[] = "Password must be at least 8 characters long";
+        }
+        if (!preg_match("/^(?=.*[a-zA-Z])(?=.*\d).{8,}$/", $data['password'])) {
+            $errors[] = "Password must include at least one letter and one number";
+        }
+        // Return the array of validation errors
+        return $errors;
+
     }
 }
 ?>
