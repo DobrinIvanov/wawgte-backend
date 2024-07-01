@@ -26,6 +26,11 @@ class UserController {
             case "GET":
                 echo json_encode($user);
                 break;
+            case "POST":
+                // login
+                $formEmail = $_POST['email'];
+                $formPassword = $_POST['password'];
+                break;
             case "PATCH":
                 // TODO on updating email only I think?
                 break;
@@ -117,8 +122,8 @@ class UserController {
         }
     }
     // !!!! PLEASE TEST REGISTRATION BEFORE PROCEEDING WITH LOGIN!!!!!
-    // public function login($username, $password): string {
-    //     // TODO
+    public function login($email, $password): string {
+            // TODO
+    }
 }
-    // }
 ?>

@@ -3,12 +3,10 @@
 // recipe controller, processes requests for recipes and uses methods from the gateway
 class RecipeController {
     // Constructor accepting a RecipeGateway instance
-    public function __construct(private RecipeGateway $gateway)
-    {
+    public function __construct(private RecipeGateway $gateway) {
     }
     // Method to process incoming requests
-    public function processRequest(string $method, ?string $id): void
-    {
+    public function processRequest(string $method, ?string $id): void {
         // If an ID is provided, process resource request, otherwise process collection request
         if ($id) {
             $this->processResourceRequest($method, $id);
@@ -18,8 +16,7 @@ class RecipeController {
     }
 
     // Method to process resource request (e.g., request for a specific recipe)
-    private function processResourceRequest(string $method, string $id): void
-    {
+    private function processResourceRequest(string $method, string $id): void {
         // TODO: Resource request processing goes here
         $recipe = $this->gateway->get($id);
 
@@ -76,8 +73,7 @@ class RecipeController {
         }
 
     }
-    private function processCollectionRequest(string $method): void
-    {
+    private function processCollectionRequest(string $method): void {
         // Switch based on the HTTP method of the request
         switch ($method) {
             case "GET":
@@ -119,8 +115,7 @@ class RecipeController {
                 header("Allow: GET, POST");
         }
     }
-    private function getRecipeValidationErrors(array $data, bool $is_new = true): array
-    {
+    private function getRecipeValidationErrors(array $data, bool $is_new = true): array {
         $errors = [];
         // Check if the "title" key in the data array is empty
         if ($is_new && empty($data["title"])) {

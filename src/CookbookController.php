@@ -1,12 +1,10 @@
 <?php
 
 class CookbookController {
-    public function __construct(private CookbookGateway $gateway)
-    {
+    public function __construct(private CookbookGateway $gateway) {
     }
     // Method to process incoming requests
-    public function processRequest(string $method, ?string $id): void
-    {
+    public function processRequest(string $method, ?string $id): void {
         // If an ID is provided, process single resource request, otherwise process collection request
         if ($id) {
             $this->processResourceRequest($method, $id);
@@ -99,8 +97,7 @@ class CookbookController {
                 header("Allow: GET, POST");
         }
     }
-    private function getCookbookValidationErrors(array $data, bool $is_new = true): array
-    {
+    private function getCookbookValidationErrors(array $data, bool $is_new = true): array {
         $errors = [];
         if ($is_new && empty($data["title"])) {
             $errors[] = "cookbook title is required";

@@ -4,14 +4,12 @@ class RecipeGateway {
     private PDO $conn;
 
     // Constructor method to initialize the RecipeGateway object with a database connection
-    public function __construct(Database $database)
-    {   
+    public function __construct(Database $database) {   
         // Get the PDO connection from the injected Database object
         $this->conn = $database->getConnection();
     }
 
-    public function getAll(): array
-    {
+    public function getAll(): array {
         // sql code to select all recipes from the table
         $sql = "SELECT *
                 FROM recipes;";
@@ -56,8 +54,7 @@ class RecipeGateway {
         return $this->conn->lastInsertId();
 
     }
-    public function get(string $id): array | false
-    {
+    public function get(string $id): array | false {
         $sql = "SELECT *
                 FROM recipes
                 WHERE recipe_id = :id;";
