@@ -49,8 +49,9 @@ class UserController {
     public function processCollectionRequest(string $method): void {
         switch ($method) {
             case "POST":
-                $data = (array) json_decode(file_get_contents("php://input"), true);
-                $this->register($data);
+                $postData = (array) json_decode(file_get_contents("php://input"), true);
+                var_dump($postData);
+                $this->register($postData);
                 break;
             default:
                 http_response_code(405);
@@ -58,11 +59,11 @@ class UserController {
         }
     }
     public function register(array $postData): void {
-        if ( ! empty($_POST['first_name']) && ! empty($_POST['last_name']) && ! empty($_POST['email']) && ! empty($_POST['password']) ) {
-            $first_name = $_POST['first_name'];
-            $last_name = $_POST['last_name'];
-            $email = $_POST['email'];
-            $password = $_POST['password'];
+        if ( ! empty($postData['first_name']) && ! empty($postData['last_name']) && ! empty($postData['email']) && ! empty($postData['password']) ) {
+            $first_name = $postData['first_name'];
+            $last_name = $postData['last_name'];
+            $email = $postData['email'];
+            $password = $postData['password'];
             try {
                 // check for existing user with the same username or email
                 $existingUserCount = $this->gateway->getExistingUserCount($email);
@@ -79,9 +80,9 @@ class UserController {
                     // encrypt user password 
                     $password_hash = password_hash($password, PASSWORD_DEFAULT);
                     $dataParameters = [
-                        "first_name" => $_POST['first_name'],
-                        "last_name" => $_POST['last_name'],
-                        "email" => $_POST['email'],
+                        "first_name" => $postData['first_name'],
+                        "last_name" => $postData['last_name'],
+                        "email" => $postData['email'],
                         "password" => $password_hash
                     ];
                     $insertRecordFlag = $this->gateway->create($dataParameters);
@@ -107,7 +108,7 @@ class UserController {
                 $server_response_error = array(
                     "code" => http_response_code(404),
                     "status" => false,
-                    "message" => "Oopps!! Something Went Wrong! " . $ex->getMessage()
+                    "message" => "Oopps!! Something went wrong! " . $ex->getMessage()
                 );
                 echo json_encode($server_response_error);
             } // end of try/catch
@@ -116,7 +117,7 @@ class UserController {
             $server_response_error = array(
                 "code" => http_response_code(404),
                 "status" => false,
-                "message" => "Invalid API parameters! Please contact the administrator or refer to the documentation for assistance."
+                "message" => "Invalid API parameters! Please contact the administrator."
             );
             echo json_encode($server_response_error);
         }

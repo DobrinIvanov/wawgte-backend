@@ -68,7 +68,7 @@ class UserGateway {
         $sql = "DELETE FROM users WHERE user_id=:user_id";
 
         $stmtDeleteUser = $this->conn->prepare($sql);
-        $stmtDeleteUser->bindValue(":id", $id, PDO::PARAM_INT);
+        $stmtDeleteUser->bindValue(":user_id", $id, PDO::PARAM_INT);
         $stmtDeleteUser->execute();
 
         return $stmtDeleteUser->rowCount();
