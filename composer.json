@@ -1,0 +1,16 @@
+{
+    "name": "wawgte.com_ezus5htrnyu/wawgte.com",
+    "description": "wawgte backend PHP API",
+    "require": {
+        "firebase/php-jwt": "^6.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dobrin Ivanov",
+            "email": "dobsc2@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
+
