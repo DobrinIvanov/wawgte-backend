@@ -28,8 +28,9 @@ class UserController {
                 break;
             case "POST":
                 // login
-                $formEmail = $_POST['email'];
-                $formPassword = $_POST['password'];
+                $postLoginData = (array) json_decode(file_get_contents("php://input"), true);
+
+                
                 break;
             case "PATCH":
                 // TODO on updating email only I think?
@@ -108,7 +109,7 @@ class UserController {
                         $server_response_error = array(
                             "code" => http_response_code(404),
                             "status" => false,
-                            "message" => "Failed to create user. Please try again."
+                            "message" => "Failed to create user. insertRecordFlag = 0; Please try again."
                         );
                         echo json_encode($server_response_error);
                     }
@@ -136,7 +137,7 @@ class UserController {
     public function login($email, $password): string {
         // TODO
     }
-    // PLEASE TEST VALIDATION FUNCTION
+
     public function getRegistrationValidationErrors(array $data, bool $is_new = true): array {
         $errors = [];
 
@@ -153,9 +154,7 @@ class UserController {
         if (!preg_match("/^(?=.*[a-zA-Z])(?=.*\d).{8,}$/", $data['password'])) {
             $errors[] = "Password must include at least one letter and one number";
         }
-        // Return the array of validation errors
         return $errors;
-
     }
 }
 ?>
