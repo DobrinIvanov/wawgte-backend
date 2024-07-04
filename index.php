@@ -2,6 +2,11 @@
 // Enable strict typing for this file
 declare(strict_types=1);
 
+// Composer autoloader and dotenv loaded
+require __DIR__ . '/vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/');
+$dotenv->load();
+
 // Register an autoloader function to automatically load classes when they are used
 spl_autoload_register(function ($class) {
     // Require the file containing the class based on the class name and its assumed location in the "src" directory
@@ -20,10 +25,8 @@ header("Access-Control-Allow-Origin: http://159.69.234.59:5173");
 // Split the REQUEST_URI into parts based on the "/" separator
 $parts = explode("/", $_SERVER["REQUEST_URI"]);
 
-include("config/config.php");
-
-// create database object with my details from config/config.php
-$database = new Database(DB_HOST,DB_NAME, DB_USER, DB_PASS);
+// create database object with my details from dotenv file
+$database = new Database($_ENV['DB_HOST'], $_ENV['DB_NAME'], $_ENV['DB_USER'], $_ENV['DB_PASS']);
 
 $object = $parts[1];
 $id = $parts[2] ?? null;
