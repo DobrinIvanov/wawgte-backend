@@ -1,6 +1,5 @@
 <?php
-class Database
-{
+class Database {
     // Constructor method to initialize the Database object with connection details
     public function __construct(private string $host, private string $name,
                                 private string $user, private string $password) {

@@ -6,6 +6,8 @@ declare(strict_types=1);
 require __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/');
 $dotenv->load();
+// load JWT
+//use Firebase\JWT\JWT;
 
 // Register an autoloader function to automatically load classes when they are used
 spl_autoload_register(function ($class) {
@@ -56,6 +58,11 @@ switch ($object) {
 
         $userController->processRequest($_SERVER["REQUEST_METHOD"], $id);
         break;
+    case 'test':
+        $testObject = new JwtUtils($_ENV['SECRET_KEY']);
+        echo json_encode($testObject->validateToken($testObject->generateToken(2)));
+        break;
+
     default:    
         http_response_code(404);
         exit;

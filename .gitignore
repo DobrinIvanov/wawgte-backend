@@ -3,4 +3,4 @@ config/config.php
 .php-ini
 .php-version
 .env
-./vendor
+vendor/
