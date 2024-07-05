@@ -7,9 +7,9 @@ class UserGateway {
         $this->conn = $database->getConnection();
     }
 
-    public function get(int $id): array | false {
+    public function getUserById(string $id): array | false {
         
-        $sql = "SELECT user_id,first_name,last_name,email FROM users WHERE user_id=:user_id";
+        $sql = "SELECT first_name,last_name,email,password FROM users WHERE user_id=:user_id";
         
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":user_id", $id, PDO::PARAM_INT);
@@ -19,14 +19,28 @@ class UserGateway {
         
         return $fetched_user;
     }
+    public function getUserByEmail(string $email): array | false {
+        
+        $sql = "SELECT user_id,first_name,last_name,password FROM users WHERE email=:email";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(":email", $email, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $fetched_user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $fetched_user;
+    }
 
-    public function updateEmail(array $current, array $new): int {
+    public function updateUser(array $current, array $new): int {
 
-        $sql = "UPDATE users SET email = :email WHERE user_id = :user_id;";
+        $sql = "UPDATE users SET email = :email, first_name=:first_name, last_name=:last_name WHERE user_id = :user_id;";
 
         $stmt = $this->conn->prepare($sql);
 
-        $stmt->bindValue(":title", $new["email"], PDO::PARAM_STR);
+        $stmt->bindValue(":email", $new["email"], PDO::PARAM_STR);
+        $stmt->bindValue(":first_name", $new["first_name"], PDO::PARAM_STR);
+        $stmt->bindValue(":last_name", $new["last_name"], PDO::PARAM_STR);
         $stmt->bindValue(":user_id", $current["user_id"], PDO::PARAM_INT);
 
         $stmt->execute();
