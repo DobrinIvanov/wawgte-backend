@@ -25,7 +25,6 @@ class RecipeController {
             echo json_encode(["message" => "Product not found!"]);
             return;
         }
-
         switch ($method) {
             case "GET":
                 echo json_encode($recipe);
@@ -46,9 +45,8 @@ class RecipeController {
                     break;
 
                 }
-
                 // here $product > $current and $data > $new data
-                $rows_count = $this->gateway->update($product, $data);
+                $rowsCount = $this->gateway->updateRecipe($product, $data);
 
                 // for successful post request that adds content to db, its best to return 201 instead of 200
                 http_response_code(200);
@@ -56,7 +54,7 @@ class RecipeController {
                 // Return a JSON response indicating successful creation of the recipe
                 echo json_encode([
                     "message" => "Recipe edited!",
-                    "Affected Rows" => $rows_count
+                    "Affected Rows" => $rowsCount
                 ]);
                 break; 
             case "DELETE":

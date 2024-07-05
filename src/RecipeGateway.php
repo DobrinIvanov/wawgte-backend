@@ -73,7 +73,7 @@ class RecipeGateway {
         // Return the fetched data
         return $data;
     }
-    public function update(array $current, array $new): int {
+    public function updateRecipe(array $current, array $new): int {
 
         $sql = "UPDATE recipes SET title = :title ,public = :public
                 WHERE recipe_id = :recipe_id;";

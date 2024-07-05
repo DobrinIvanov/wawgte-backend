@@ -37,31 +37,30 @@ switch ($object) {
     case 'recipes':
         // set up new recipe gateway connected to the database I need
         $recipeGateway = new RecipeGateway($database);
-        
         // set up new Recipe Controller which would handle the HTTP requests and use the gateway methods I guess?
         $recipeController = new RecipeController($recipeGateway);
-        
         // actually process the request using this "processRequest" method ( does it come from PDO?)
         $recipeController->processRequest($_SERVER["REQUEST_METHOD"], $id);
         break;
     case 'cookbooks':
         $cookbookGateway = new CookbookGateway($database);
-
         $cookbookController = new CookbookController($cookbookGateway);
-
         $cookbookController->processRequest($_SERVER["REQUEST_METHOD"], $id);
         break;
     case 'users':
         $userGateway = new UserGateway($database);
-
         $userController = new UserController($userGateway);
-
         $userController->processRequest($_SERVER["REQUEST_METHOD"], $id);
         break;
-    case 'test':
-        $testObject = new JwtUtils($_ENV['SECRET_KEY']);
-        echo json_encode($testObject->validateToken($testObject->generateToken(2)));
+    case 'login':
+        $userGateway = new UserGateway($database);
+        $userController = new UserController($userGateway);
+        $userController->login($_SERVER["REQUEST_METHOD"]);
         break;
+    // case 'test':
+    //     $testObject = new JwtUtils($_ENV['SECRET_KEY']);
+    //     echo json_encode($testObject->validateToken($testObject->generateToken(2)));
+    //     break;
 
     default:    
         http_response_code(404);

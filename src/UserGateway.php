@@ -7,7 +7,7 @@ class UserGateway {
         $this->conn = $database->getConnection();
     }
 
-    public function getUserById(string $id): array | false {
+    public function getUserDataById(string $id): array | false {
         
         $sql = "SELECT first_name,last_name,email,password FROM users WHERE user_id=:user_id";
         
@@ -19,9 +19,9 @@ class UserGateway {
         
         return $fetched_user;
     }
-    public function getUserByEmail(string $email): array | false {
+    public function getUserDataByEmail(string $email): array | false {
         
-        $sql = "SELECT user_id,first_name,last_name,password FROM users WHERE email=:email";
+        $sql = "SELECT user_id,first_name,last_name FROM users WHERE email=:email";
         
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":email", $email, PDO::PARAM_INT);
@@ -30,6 +30,16 @@ class UserGateway {
         $fetched_user = $stmt->fetch(PDO::FETCH_ASSOC);
         
         return $fetched_user;
+    }
+    public function getPasswordByEmail(string $email): array | false { 
+        $sql = "SELECT password FROM users WHERE email=:email";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(":email", $email, PDO::PARAM_INT);
+        $stmt->execute();
+        $fetchedData = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $fetchedData;
     }
 
     public function updateUser(array $current, array $new): int {
