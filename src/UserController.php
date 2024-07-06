@@ -3,11 +3,11 @@
 class UserController {
     public function __construct(private UserGateway $gateway) {
     }
-    public function processRequest(string $method, ?string $id): void
+    public function processRequest(string $method, ?string $option): void
     {
         // If an ID is provided, process resource request, otherwise process collection request
         if ($id) {
-            $this->processResourceRequest($method, $id);
+            $this->processResourceRequest($method, $option);
         } else {
             $this->processCollectionRequest($method);
         };
@@ -49,7 +49,7 @@ class UserController {
     public function processCollectionRequest(string $method): void {
         switch ($method) {
             case "POST":
-                // create/register new user
+                // REGISTRATION create/register new user
                 $postData = (array) json_decode(file_get_contents("php://input"), true);
 
                 $errors = $this->getUserDataValidationErrors($postData);

@@ -31,7 +31,7 @@ $parts = explode("/", $_SERVER["REQUEST_URI"]);
 $database = new Database($_ENV['DB_HOST'], $_ENV['DB_NAME'], $_ENV['DB_USER'], $_ENV['DB_PASS']);
 
 $object = $parts[1];
-$id = $parts[2] ?? null;
+$option = $parts[2] ?? null;
 
 switch ($object) {
     case 'recipes':
@@ -40,23 +40,37 @@ switch ($object) {
         // set up new Recipe Controller which would handle the HTTP requests and use the gateway methods I guess?
         $recipeController = new RecipeController($recipeGateway);
         // actually process the request using this "processRequest" method ( does it come from PDO?)
-        $recipeController->processRequest($_SERVER["REQUEST_METHOD"], $id);
+        $recipeController->processRequest($_SERVER["REQUEST_METHOD"], $option);
         break;
     case 'cookbooks':
         $cookbookGateway = new CookbookGateway($database);
         $cookbookController = new CookbookController($cookbookGateway);
-        $cookbookController->processRequest($_SERVER["REQUEST_METHOD"], $id);
+        $cookbookController->processRequest($_SERVER["REQUEST_METHOD"], $option);
         break;
     case 'users':
         $userGateway = new UserGateway($database);
         $userController = new UserController($userGateway);
-        $userController->processRequest($_SERVER["REQUEST_METHOD"], $id);
+        $userController->processRequest($_SERVER["REQUEST_METHOD"], $option);
         break;
     case 'login':
         $userGateway = new UserGateway($database);
         $userController = new UserController($userGateway);
         $userController->login($_SERVER["REQUEST_METHOD"]);
         break;
+    case 'search':
+        if ($option === 'recipes') {
+            $recipeGateway = new RecipeGateway($database);
+            $recipeController = new RecipeController($recipeGateway);
+            $recipeController->search();
+            break;
+        }
+        if ($option === 'cookbooks') {
+            // SEARCH COOKBOOKS
+            $cookbookGateway = new CookbookGateway($database);
+            $cookbookController = new CookbookController($cookbookGateway);
+            $cookbookController->search();
+            break;
+        }
     // case 'test':
     //     $testObject = new JwtUtils($_ENV['SECRET_KEY']);
     //     echo json_encode($testObject->validateToken($testObject->generateToken(2)));

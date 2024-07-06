@@ -37,6 +37,7 @@ class UserGateway {
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":email", $email, PDO::PARAM_INT);
         $stmt->execute();
+        // fetched data is associative array = [password => 'hashedPw']
         $fetchedData = $stmt->fetch(PDO::FETCH_ASSOC);
         
         return $fetchedData;

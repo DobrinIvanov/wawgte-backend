@@ -14,7 +14,6 @@ class RecipeController {
             $this->processCollectionRequest($method);
         };
     }
-
     // Method to process resource request (e.g., request for a specific recipe)
     private function processResourceRequest(string $method, string $id): void {
         // TODO: Resource request processing goes here
@@ -130,5 +129,14 @@ class RecipeController {
         }
         // Return the array of validation errors
         return $errors;
+    }
+    private function searchRecipes(); {
+
+    }
+    private function selectRandomRecipe(); {
+        
+    }
+    private function selectRandomRecipePerCookbook(); {
+
     }
 }
