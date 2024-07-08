@@ -3,8 +3,7 @@
 class UserController {
     public function __construct(private UserGateway $gateway) {
     }
-    public function processRequest(string $method, ?string $option): void
-    {
+    public function processRequest(string $method, ?string $option): void {
         // If an ID is provided, process resource request, otherwise process collection request
         if ($id) {
             $this->processResourceRequest($method, $option);
@@ -117,48 +116,70 @@ class UserController {
         } 
     }
     public function login(string $method): string {
-        if ($method === 'POST') {
+        try {
 
-            $postData = (array) json_decode(file_get_contents("php://input"), true);
-
-            $email = $postData['email'];
-            $submittedPassword = $postData['password'];
-
-            $submittedPasswordHash = password_hash($password, PASSWORD_DEFAULT);
-
-            $fetchedData = $this->gateway->getPasswordByEmail($email);
-            $userPasswordHash = $fetchedData['password']
-
-            if ($userPasswordHash === $submittedPasswordHash) {
-                // TODO
-                setcookie("jwt", $jwt, time() + (86400 * 7), "/", "", true, true);
-                http_response_code(200);
-                return;
-            } else {
-                http_response_code(401);
-                $server_response_error = array(
-                    "code" => http_response_code(401),
-                    "status" => false,
-                    "message" => "Authentication Failed! Password does not match!"
-                );
-                echo json_encode($server_response_error); 
-                reeturn;
+            if ($method === 'POST') {
+    
+                $postData = (array) json_decode(file_get_contents("php://input"), true);
+                if (!$postData || !isset($postData['email']) || !isset($postData['password'])) {
+                    http_response_code(400);
+                    $server_response_error = array(
+                        "code" => 400,
+                        "status" => false,
+                        "message" => "Invalid input."
+                    );
+                    return json_encode($server_response_error);
+                }
+                $submittedEmail = $postData['email'];
+                $submittedPassword = $postData['password'];
+    
+                // obtain user if exists for this login and check if successful
+                $fetchedUser = $this->gateway->getUserDataByEmail($submittedEmail);
+                if ( ! $fetchedUser) {
+                    http_response_code(404)
+                    $server_response_error = array(
+                        "code" => http_response_code(404),
+                        "status" => false,
+                        "message" => "Login failed! User not found."
+                    );
+                    break;
+                }
+                $userPasswordHash = $fetchedData['password'];
+                
+                if (password_verify($submittedPassword, $userPasswordHash)) {
+                    // Set up JwtUtils object in order to generate token
+                    $jwtUtils = new JwtUtils();
+                    $jwt = $jwtUtils->generateToken($fetchedUser);
+                    setcookie("jwtWawgte", $jwt, time() + (86400 * 7), "/", "", true, true);
+                    http_response_code(200);
+                    $server_response_success = array(
+                        "code" => 200,
+                        "status" => true,
+                        "message" => "Login successful."
+                    );
+                    return json_encode($server_response_success);
+                } else {
+                    http_response_code(401);
+                    $server_response_error = array(
+                        "code" => http_response_code(401),
+                        "status" => false,
+                        "message" => "Authentication Failed! Password does not match!"
+                    );
+                    echo json_encode($server_response_error);
+                    break;
+                }
             }
-            
-
-
+        } catch (exception $exeption) {
+            http_response_code(500);
+            $server_response_error = array(
+                "code" => http_response_code(401),
+                "status" => false,
+                "message" => "Oops! Something went wrong during login!"
+            );
+            echo json_encode($server_response_error); 
         }
     }
-    public function getLoginValidationErrors(array $data): array {
-        $errors = [];
-        if (empty($data['email']) || empty($data['password'])) {
-            $errors = "Email and password must not be empty";
-        }
-        if (filter_var($data['email'], FILTER_VALIDATE_EMAIL) === false) {
-            $errors = "Email address must be a valid one";
-        }
-        return $errors;
-    }
+    // 
     public function getUserDataValidationErrors(array $data, bool $is_new = true): array {
         $errors = [];
 

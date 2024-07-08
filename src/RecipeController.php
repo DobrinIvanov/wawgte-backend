@@ -131,12 +131,12 @@ class RecipeController {
         return $errors;
     }
     private function searchRecipes(); {
-
+        // TODO
     }
     private function selectRandomRecipe(); {
-        
+        // TODO
     }
     private function selectRandomRecipePerCookbook(); {
-
+        // TODO
     }
 }

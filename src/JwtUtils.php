@@ -7,13 +7,16 @@ class JwtUtils {
     public function __construct(private string $secretKey) {
     }
 
-    public function generateToken($userId): string{
+    public function generateToken($user): string{
         $payload = [
             'iss' => 'backend.wawgte.com',
             'iat' => time(),
             'exp' => time() + 86400,
             'data' => [
-                'userId' => $userId,
+                'userId' => $user['user_id'],
+                'email' => $user['email'],
+                'fname' => $user['first_name'],
+                'lname' => $user['last_name']
             ]
         ];
 
