@@ -1,5 +1,10 @@
 <?php
 
+//require '/var/www/vhosts/wawgte.com/backend.wawgte.com/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
 class UserController {
     public function __construct(private UserGateway $gateway) {
     }
@@ -115,68 +120,72 @@ class UserController {
             echo json_encode($server_response_error);
         } 
     }
-    public function login(string $method): string {
-        try {
-
-            if ($method === 'POST') {
+    public function login(string $method): void {
     
-                $postData = (array) json_decode(file_get_contents("php://input"), true);
-                if (!$postData || !isset($postData['email']) || !isset($postData['password'])) {
-                    http_response_code(400);
-                    $server_response_error = array(
-                        "code" => 400,
-                        "status" => false,
-                        "message" => "Invalid input."
-                    );
-                    return json_encode($server_response_error);
-                }
-                $submittedEmail = $postData['email'];
-                $submittedPassword = $postData['password'];
-    
-                // obtain user if exists for this login and check if successful
-                $fetchedUser = $this->gateway->getUserDataByEmail($submittedEmail);
-                if ( ! $fetchedUser) {
-                    http_response_code(404)
-                    $server_response_error = array(
-                        "code" => http_response_code(404),
-                        "status" => false,
-                        "message" => "Login failed! User not found."
-                    );
-                    break;
-                }
-                $userPasswordHash = $fetchedData['password'];
-                
-                if (password_verify($submittedPassword, $userPasswordHash)) {
-                    // Set up JwtUtils object in order to generate token
-                    $jwtUtils = new JwtUtils();
-                    $jwt = $jwtUtils->generateToken($fetchedUser);
-                    setcookie("jwtWawgte", $jwt, time() + (86400 * 7), "/", "", true, true);
-                    http_response_code(200);
-                    $server_response_success = array(
-                        "code" => 200,
-                        "status" => true,
-                        "message" => "Login successful."
-                    );
-                    return json_encode($server_response_success);
-                } else {
-                    http_response_code(401);
-                    $server_response_error = array(
-                        "code" => http_response_code(401),
-                        "status" => false,
-                        "message" => "Authentication Failed! Password does not match!"
-                    );
-                    echo json_encode($server_response_error);
-                    break;
-                }
+        if ($method === 'POST') {
+            // obtain POST data ( Email & Password ) and check for valid input
+            $postData = (array) json_decode(file_get_contents("php://input"), true);
+            if (!$postData || !isset($postData['email']) || !isset($postData['password'])) {
+                http_response_code(400);
+                $server_response_error = array(
+                    "code" => 400,
+                    "status" => false,
+                    "message" => "Invalid input. empty postData or empty email/password."
+                );
+                echo json_encode($server_response_error);
+                return;
             }
-        } catch (exception $exeption) {
-            http_response_code(500);
+
+            $submittedEmail = $postData['email'];
+            $submittedPassword = $postData['password'];
+
+            // obtain user if exists for this login and check if successful
+            $fetchedUser = $this->gateway->getUserDataByEmail($submittedEmail);
+            if ( ! $fetchedUser) {
+                $server_response_error = array(
+                    "code" => http_response_code(404),
+                    "status" => false,
+                    "message" => "Login failed! User not found."
+                );
+                echo json_encode($server_response_error);
+                http_response_code(404);
+                return;
+            }
+            // var_dump($fetchedUser);
+            $userPasswordHash = $fetchedUser['password'];
+            
+            if (password_verify($submittedPassword, $userPasswordHash)) {
+                // Set up JwtUtils object in order to generate token
+                $jwtUtils = new JwtUtils($_ENV['SECRET_KEY']);
+                $jwt = $jwtUtils->generateToken($fetchedUser);
+                setcookie("jwtWawgte", $jwt, time() + (86400 * 7), "/", "", true, true);
+                http_response_code(200);
+                $server_response_success = array(
+                    "code" => 200,
+                    "status" => true,
+                    "message" => "Login successful."
+                );
+                echo json_encode($server_response_success);
+                return;
+            } else {
+                http_response_code(401);
+                $server_response_error = array(
+                    "code" => http_response_code(401),
+                    "status" => false,
+                    "message" => "Authentication Failed! Password does not match!"
+                );
+                echo json_encode($server_response_error);
+                return;
+            }
+        } else {
+            http_response_code(405);
             $server_response_error = array(
-                "code" => http_response_code(401),
+                "code" => http_response_code(405),
                 "status" => false,
-                "message" => "Oops! Something went wrong during login!"
+                "message" => "Method not allowed!"
             );
-            echo json_encode($server_response_error); 
+            json_encode($server_response_error);
+            return;
         }
     }
     // 

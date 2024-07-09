@@ -130,6 +130,7 @@ class RecipeController {
         // Return the array of validation errors
         return $errors;
     }
+    // ALL EMPTY BELOW > TODO
     private function searchRecipes(); {
         // TODO
     }

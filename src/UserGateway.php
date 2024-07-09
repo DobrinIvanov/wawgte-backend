@@ -9,7 +9,7 @@ class UserGateway {
 
     public function getUserDataById(string $id): array | false {
         
-        $sql = "SELECT first_name,last_name,email,password FROM users WHERE user_id=:user_id";
+        $sql = "SELECT * FROM users WHERE user_id=:user_id";
         
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":user_id", $id, PDO::PARAM_INT);
@@ -21,7 +21,7 @@ class UserGateway {
     }
     public function getUserDataByEmail(string $email): array | false {
         
-        $sql = "SELECT user_id,first_name,last_name FROM users WHERE email=:email";
+        $sql = "SELECT * FROM users WHERE email=:email";
         
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":email", $email, PDO::PARAM_INT);
