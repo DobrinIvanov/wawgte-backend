@@ -188,7 +188,6 @@ class UserController {
             return;
         }
     }
-    // 
     public function getUserDataValidationErrors(array $data, bool $is_new = true): array {
         $errors = [];
 

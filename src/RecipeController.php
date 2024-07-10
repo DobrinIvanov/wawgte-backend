@@ -131,13 +131,13 @@ class RecipeController {
         return $errors;
     }
     // ALL EMPTY BELOW > TODO
-    private function searchRecipes(); {
+    private function searchRecipes($searchTerm); {
         // TODO
     }
     private function selectRandomRecipe(); {
         // TODO
     }
-    private function selectRandomRecipePerCookbook(); {
+    private function selectRandomRecipePerCookbook($cookbookId); {
         // TODO
     }
 }

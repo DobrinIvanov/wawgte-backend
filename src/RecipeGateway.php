@@ -2,13 +2,11 @@
 class RecipeGateway {  
     // Declare a private property to hold the PDO connection 
     private PDO $conn;
-
     // Constructor method to initialize the RecipeGateway object with a database connection
     public function __construct(Database $database) {   
         // Get the PDO connection from the injected Database object
         $this->conn = $database->getConnection();
     }
-
     public function getAll(): array {
         // sql code to select all recipes from the table
         $sql = "SELECT * FROM recipes;";
@@ -30,7 +28,6 @@ class RecipeGateway {
         return $data;
 
     }
-
     // create method on the RecipeGateway that would handle post requests towards backend/recipes and create recipes in the db
     public function create(array $data): string {
 
@@ -98,5 +95,20 @@ class RecipeGateway {
 
         return $stmt->rowCount();
     }
-    
+    public function search(string $searchString): array | false {
+        $searchString = "%" . $searchString . "%";
+
+        $sql = "SELECT * FROM recipes 
+                WHERE title LIKE :searchString 
+                OR description LIKE :searchString 
+                OR instructions LIKE :searchString";
+
+        $searchStatement = $this->conn->prepare($sql);
+        $searchStatement->bindValue(":searchString", $searchString, PDO::PARAM_STR);
+        $searchStatement->execute();
+
+        $foundRecipes = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $foundRecipes;
+    }
 }

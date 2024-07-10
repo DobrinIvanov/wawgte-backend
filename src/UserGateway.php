@@ -110,9 +110,6 @@ class UserGateway {
         
         return $existingUserCount;
     }
-    // public function getAll(){
-    // }
-    // not sure if that ^ would be required 
 }
 
 ?>
