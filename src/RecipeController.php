@@ -129,26 +129,52 @@ class RecipeController {
         // Return the array of validation errors
         return $errors;
     }
-    public function searchRecipes(string $method): array | false {
-        if ($method === 'POST') {
-            $data = (array) json_decode(file_get_contents("php://input"), true);
-            if ( empty($data) || empty($data['searchString'])) {
-                http_response_code(400);
-                $server_response_error = array(
-                    "code" => 400,
-                    "status" => false,
-                    "message" => "Invalid input. Empty search string!"
-                );
-                echo json_encode($server_response_error);
-                return false;
-            }
-            $searchTerm = $data["searchString"];
-            $recipesFound = $this->gateway->search($searchTerm);
-            return $recipesFound;
-        } else {
-            http_response_code(405);
+    // public function searchRecipes(string $method): array | false {
+    //     if ($method === 'POST') {
+    //         $data = (array) json_decode(file_get_contents("php://input"), true);
+    //         if ( empty($data) || empty($data['searchString'])) {
+    //             http_response_code(400);
+    //             $server_response_error = array(
+    //                 "code" => 400,
+    //                 "status" => false,
+    //                 "message" => "Invalid input. Empty search string!"
+    //             );
+    //             echo json_encode($server_response_error);
+    //             return false;
+    //         }
+    //         $searchTerm = $data["searchString"];
+    //         $recipesFound = $this->gateway->search($searchTerm);
+    //         return $recipesFound;
+    //     } else {
+    //         http_response_code(405);
+    //     }
+    // }
+    public function searchRecipes($method): void {
+        // Check if the request method is GET
+        if ($method !== 'GET') {
+            http_response_code(405); // Method Not Allowed
+            return;
         }
+        
+        // Check if the search term is present in the query string
+        if (!isset($_GET['searchString']) || empty($_GET['searchString'])) {
+            http_response_code(400); // Bad Request
+            $server_response_error = [
+            "code" => 400,
+            "status" => false,
+            "message" => "Invalid input. Empty search string or not set at all!",
+            ];
+            echo json_encode($server_response_error);
+            return;
+        }
+
+        // Extract search term from query string
+        $searchTerm = $_GET['searchString'];
+        // Call the gateway to search recipes
+        echo json_encode($this->gateway->search($searchTerm));
+        return;
     }
+
     public function selectRandomRecipe(): void {
         // TODO
     }

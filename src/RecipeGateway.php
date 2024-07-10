@@ -17,7 +17,6 @@ class RecipeGateway {
         // create array to store all recipes that we will return
         $data = [];
 
-        //
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             // in mysql bool is represented as 0/1 and here we convert to bool true/false for each recipe
             $row["public"] = (bool) $row["public"];
@@ -97,21 +96,22 @@ class RecipeGateway {
     }
     public function search(string $searchString): array | false {
         $searchString = "%" . $searchString . "%";
-
+        // REWORK SQL!
+        // SQL SEARCH DOESNT WORK AS EXPECTED, BUT EVERYTHING ELSE IS FINE!!!
         $sql = "SELECT * FROM recipes 
                 WHERE title LIKE :searchString1 
                 OR description LIKE :searchString2
-                OR instructions LIKE :searchString3";
+                OR instructions LIKE :searchString3;";
 
         $searchStatement = $this->conn->prepare($sql);
+
         $searchStatement->bindValue(":searchString1", $searchString, PDO::PARAM_STR);
         $searchStatement->bindValue(":searchString2", $searchString, PDO::PARAM_STR);
-
         $searchStatement->bindValue(":searchString3", $searchString, PDO::PARAM_STR);
 
         $searchStatement->execute();
-        $foundRecipes = $searchStatement->fetchAll(PDO::FETCH_ASSOC);
 
+        $foundRecipes = $searchStatement->fetchAll(PDO::FETCH_ASSOC);
         return $foundRecipes;
     }
 }

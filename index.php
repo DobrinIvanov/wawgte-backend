@@ -74,7 +74,7 @@ switch ($object) {
     //     $testObject = new JwtUtils($_ENV['SECRET_KEY']);
     //     echo json_encode($testObject->validateToken($testObject->generateToken(2)));
     //     break;
-    default:    
+    default:
         http_response_code(404);
         exit;
     }
