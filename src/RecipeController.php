@@ -65,8 +65,9 @@ class RecipeController {
                 ]);
                 break;
             default:
-            http_response_code(405);
-            header("Allow: GET, PATCH, DELETE");
+                http_response_code(405);
+                header("Allow: GET, PATCH, DELETE");
+                break;
         }
 
     }
@@ -83,7 +84,6 @@ class RecipeController {
                 // also we need to use array format, so we convert that to array with json_decode( _ ,true)
                 // we also use (array) so that empty request returns an array instead of NULL
                 $data = (array) json_decode(file_get_contents("php://input"), true);
-                
                 // validate data and get errors if any
                 $errors = $this->getRecipeValidationErrors($data, true);
 
@@ -92,9 +92,7 @@ class RecipeController {
                     http_response_code(422);
                     echo json_encode(["errors" => $errors]);
                     break;
-
                 }
-
                 // Create a new recipe using data from the request and get the ID
                 $id = $this->gateway->create($data);
 
@@ -110,6 +108,7 @@ class RecipeController {
             default:
                 http_response_code(405);
                 header("Allow: GET, POST");
+                break;
         }
     }
     private function getRecipeValidationErrors(array $data, bool $is_new = true): array {
@@ -130,14 +129,30 @@ class RecipeController {
         // Return the array of validation errors
         return $errors;
     }
-    // ALL EMPTY BELOW > TODO
-    private function searchRecipes($searchTerm); {
+    public function searchRecipes(string $method): array | false {
+        if ($method === 'POST') {
+            $data = (array) json_decode(file_get_contents("php://input"), true);
+            if ( empty($data) || empty($data['searchString'])) {
+                http_response_code(400);
+                $server_response_error = array(
+                    "code" => 400,
+                    "status" => false,
+                    "message" => "Invalid input. Empty search string!"
+                );
+                echo json_encode($server_response_error);
+                return false;
+            }
+            $searchTerm = $data["searchString"];
+            $recipesFound = $this->gateway->search($searchTerm);
+            return $recipesFound;
+        } else {
+            http_response_code(405);
+        }
+    }
+    public function selectRandomRecipe(): void {
         // TODO
     }
-    private function selectRandomRecipe(); {
-        // TODO
-    }
-    private function selectRandomRecipePerCookbook($cookbookId); {
+    public function selectRandomRecipePerCookbook($cookbookId): void {
         // TODO
     }
 }

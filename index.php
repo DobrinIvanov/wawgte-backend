@@ -61,21 +61,19 @@ switch ($object) {
         if ($option === 'recipes') {
             $recipeGateway = new RecipeGateway($database);
             $recipeController = new RecipeController($recipeGateway);
-            $recipeController->search();
+            $recipeController->searchRecipes($_SERVER["REQUEST_METHOD"]);
             break;
         }
         if ($option === 'cookbooks') {
-            // SEARCH COOKBOOKS
             $cookbookGateway = new CookbookGateway($database);
             $cookbookController = new CookbookController($cookbookGateway);
-            $cookbookController->search();
+            $cookbookController->searchCookbooks($_SERVER["REQUEST_METHOD"]);
             break;
         }
     // case 'test':
     //     $testObject = new JwtUtils($_ENV['SECRET_KEY']);
     //     echo json_encode($testObject->validateToken($testObject->generateToken(2)));
     //     break;
-
     default:    
         http_response_code(404);
         exit;

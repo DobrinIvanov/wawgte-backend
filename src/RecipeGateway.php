@@ -99,15 +99,18 @@ class RecipeGateway {
         $searchString = "%" . $searchString . "%";
 
         $sql = "SELECT * FROM recipes 
-                WHERE title LIKE :searchString 
-                OR description LIKE :searchString 
-                OR instructions LIKE :searchString";
+                WHERE title LIKE :searchString1 
+                OR description LIKE :searchString2
+                OR instructions LIKE :searchString3";
 
         $searchStatement = $this->conn->prepare($sql);
-        $searchStatement->bindValue(":searchString", $searchString, PDO::PARAM_STR);
-        $searchStatement->execute();
+        $searchStatement->bindValue(":searchString1", $searchString, PDO::PARAM_STR);
+        $searchStatement->bindValue(":searchString2", $searchString, PDO::PARAM_STR);
 
-        $foundRecipes = $stmt->fetch(PDO::FETCH_ASSOC);
+        $searchStatement->bindValue(":searchString3", $searchString, PDO::PARAM_STR);
+
+        $searchStatement->execute();
+        $foundRecipes = $searchStatement->fetchAll(PDO::FETCH_ASSOC);
 
         return $foundRecipes;
     }
