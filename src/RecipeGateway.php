@@ -50,6 +50,7 @@ class RecipeGateway {
 
     }
     public function get(string $id): array | false {
+
         $sql = "SELECT * FROM recipes 
                 WHERE recipe_id = :id;";
         
@@ -100,7 +101,7 @@ class RecipeGateway {
         // SQL SEARCH DOESNT WORK AS EXPECTED, BUT EVERYTHING ELSE IS FINE!!!
         $sql = "SELECT * FROM recipes 
                 WHERE title LIKE :searchString1 
-                OR description LIKE :searchString2
+                OR description LIKE :searchString2 
                 OR instructions LIKE :searchString3;";
 
         $searchStatement = $this->conn->prepare($sql);
@@ -113,5 +114,18 @@ class RecipeGateway {
 
         $foundRecipes = $searchStatement->fetchAll(PDO::FETCH_ASSOC);
         return $foundRecipes;
+    }
+
+    public function getAllIds(): array | false {
+        $sqlObtainIDs = "SELECT user_id FROM users;";
+        $stmtObtainIDs = $this->conn->query($sqlObtainIDs);
+
+        if ($stmtObtainIDs === false) {
+            return false;
+        }
+
+        $ids = $stmtObtainIDs->fetchAll(PDO::FETCH_COLUMN, 0);
+
+        return $ids;
     }
 }

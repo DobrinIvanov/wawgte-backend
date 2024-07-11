@@ -70,6 +70,11 @@ switch ($object) {
             $cookbookController->searchCookbooks($_SERVER["REQUEST_METHOD"]);
             break;
         }
+    case 'wawgte':
+        $recipeGateway = new RecipeGateway($database);
+        $recipeController = new RecipeController($recipeGateway);
+        $recipeController->selectRandomRecipe($_SERVER["REQUEST_METHOD"]);
+        break;
     // case 'test':
     //     $testObject = new JwtUtils($_ENV['SECRET_KEY']);
     //     echo json_encode($testObject->validateToken($testObject->generateToken(2)));

@@ -176,8 +176,12 @@ class RecipeController {
     }
 
     public function selectRandomRecipe(): void {
-        // TODO
+        $ids = $this->gateway->getAllIds();
+        $randomKey = array_rand($ids);
+        $randomId = $ids[$randomKey];
+        echo json_encode($this->gateway->get($randomId));
     }
+
     public function selectRandomRecipePerCookbook($cookbookId): void {
         // TODO
     }
