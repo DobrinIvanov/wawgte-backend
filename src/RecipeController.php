@@ -155,7 +155,6 @@ class RecipeController {
             http_response_code(405); // Method Not Allowed
             return;
         }
-        
         // Check if the search term is present in the query string
         if (!isset($_GET['searchString']) || empty($_GET['searchString'])) {
             http_response_code(400); // Bad Request
@@ -167,7 +166,6 @@ class RecipeController {
             echo json_encode($server_response_error);
             return;
         }
-
         // Extract search term from query string
         $searchTerm = $_GET['searchString'];
         // Call the gateway to search recipes
@@ -183,6 +181,9 @@ class RecipeController {
     }
 
     public function selectRandomRecipePerCookbook($cookbookId): void {
-        // TODO
+        
+    }
+    public function selectRandomRecipeInFavourites($userId): void {
+        
     }
 }
