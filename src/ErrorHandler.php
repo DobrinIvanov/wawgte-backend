@@ -16,7 +16,7 @@ class ErrorHandler
         int $errno,
         string $errstr,
         string $errfile,
-        int$errline,
+        int $errline,
     ): bool {
         throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
     }
