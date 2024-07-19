@@ -94,7 +94,7 @@ switch ($object) {
         break;
     default:
         http_response_code(404);
-        echo json_encode(["message" => "No Endpoints found!"])
-        exit;
+        echo json_encode(["message" => "No Endpoints found!"]);
+        break;
     }
 ?>
