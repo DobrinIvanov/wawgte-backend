@@ -73,6 +73,7 @@ switch ($object) {
     case 'wawgte':
         $recipeGateway = new RecipeGateway($database);
         $recipeController = new RecipeController($recipeGateway);
+        // $option would be the cookbook selected
         if (!$option) {
             $recipeController->selectRandomRecipe($_SERVER["REQUEST_METHOD"]);
             break;
@@ -81,12 +82,19 @@ switch ($object) {
             $recipeController->selectRandomRecipePerCookbook($_SERVER["REQUEST_METHOD"]);
             break;
         }
-    // case 'test':
-    //     $testObject = new JwtUtils($_ENV['SECRET_KEY']);
-    //     echo json_encode($testObject->validateToken($testObject->generateToken(2)));
-    //     break;
+    case 'jwt':
+        $jwtUtils = new JwtUtils($_ENV['SECRET_KEY']);
+        $jwToken = $_COOKIE['jwtWawgte'];
+        $validationResult = $jwtUtils->validateToken($jwToken);
+        if (is_array($validationResult)) {
+            echo json_encode(['status' => 'success', 'data' => $validationResult]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => $validationResult]);
+        }
+        break;
     default:
         http_response_code(404);
+        echo json_encode(["message" => "No Endpoints found!"])
         exit;
     }
 ?>
