@@ -23,18 +23,20 @@ set_exception_handler("ErrorHandler::handleException");
 // Handle CORS preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     // Allow specific methods and headers for CORS
-    header("Content-type: application/json; charset=UTF-8");
-    header('Access-Control-Allow-Origin: http://159.69.234.59:5173');
+    header('Content-type: application/json; charset=UTF-8');
+    header('Access-Control-Allow-Origin: https://159.69.234.59:5173');
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PATCH, DELETE');
     header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    header('Access-Control-Allow-Credentials: true'); // Allow credentials
     http_response_code(204); // No Content
     exit;
 }
 // Set the HTTP header to indicate that the response will be in JSON format with UTF-8 encoding
-header("Content-type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PATCH, DELETE");
+header('Content-type: application/json; charset=UTF-8');
+header('Access-Control-Allow-Origin: https://159.69.234.59:5173');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PATCH, DELETE');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
-header("Access-Control-Allow-Origin: http://159.69.234.59:5173");
+header('Access-Control-Allow-Credentials: true'); // Allow credentials
 
 
 // Split the REQUEST_URI into parts based on the "/" separator

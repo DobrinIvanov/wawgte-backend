@@ -121,7 +121,6 @@ class UserController {
         } 
     }
     public function login(string $method): void {
-    
         if ($method === 'POST') {
             // obtain POST data ( Email & Password ) and check for valid input
             $postData = (array) json_decode(file_get_contents("php://input"), true);
@@ -153,12 +152,18 @@ class UserController {
             }
             // var_dump($fetchedUser);
             $userPasswordHash = $fetchedUser['password'];
-            
             if (password_verify($submittedPassword, $userPasswordHash)) {
                 // Set up JwtUtils object in order to generate token
                 $jwtUtils = new JwtUtils($_ENV['SECRET_KEY']);
                 $jwt = $jwtUtils->generateToken($fetchedUser);
-                setcookie("jwtWawgte", $jwt, time() + (86400 * 7), "/", "", true, true);
+                setcookie("jwtWawgte", $jwt, [
+                    'expires' => time() + (86400 * 7), // 7 days from now
+                    'path' => '/',
+                    'domain' => '', // Default domain
+                    'secure' => true, // Not secure (for development over HTTP)
+                    'httponly' => false, // HTTP only
+                    'samesite' => 'none' // SameSite attribute
+                ]);
                 http_response_code(200);
                 $server_response_success = array(
                     "code" => 200,
